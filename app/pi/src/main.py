@@ -1,12 +1,14 @@
 import Camera
 import Firebase
-import Motion
+from Motion import Motion
+import Firebase.FCMManager
 from time import sleep
 import sys
 
 def main():
-    while True:
-      sleep(60)
+    # pir = Motion(4)
+    # pir.start()
+    pass
 
 try:
     main()
