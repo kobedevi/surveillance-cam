@@ -18,6 +18,26 @@ rawCapture = PiRGBArray(camera, size = (640, 480))
 avg = None
 motion_treshold = 60
 movement_frames = 0
+recording = False
+
+
+def capture(frames, motion_thresh, is_recording):
+    if frames == motion_thresh :
+        global recording
+        dirname = os.path.dirname(__file__)
+        filename = os.path.join(dirname, 'out/')
+        # PICTURE
+        # camera.capture(filename + 'image.jpg')
+        # RECORD
+        if recording == False:
+            recording = True
+            time = datetime.datetime.now().strftime('%d%m%Y_%I-%M-%S')
+            camera.start_recording(filename + time + '.h264')
+            camera.wait_recording(5)
+            camera.stop_recording()
+            recording = False
+        else: 
+            pass
 
 # allow the camera to adjust to lighting/white balance
 time.sleep(2)
@@ -50,7 +70,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     thresh = cv2.dilate(thresh, None, iterations=2)
     
     # show the result
-    cv2.imshow("Delta + Thresh", thresh)
+    # cv2.imshow("Delta + Thresh", thresh)
 
     # find contours or continuous white blobs in the image
     contours, hierarchy = cv2.findContours(thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -66,29 +86,16 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             movement_frames += 1
             if movement_frames > motion_treshold:
                 movement_frames = 0
-            def test(frames, motion_thresh):
-                if frames == motion_thresh :
-                    print('take picture')
-                    dirname = os.path.dirname(__file__)
-                    filename = os.path.join(dirname, 'out/')
-                    camera.capture(filename + 'image.jpg')
-            threading.Thread(target=test, args=(movement_frames, motion_treshold)).start()
+            threading.Thread(target=capture, args=(movement_frames, motion_treshold, recording)).start()
         else:
-            # non_movement_frames +=1
-            # cv2.putText(frame, 'we here', (10, 100 ), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)  
-            # if non_movement_frames > 10:
-            #     movement_frames = 0
-            #     non_movement_frames = 0
             pass
                 
     cv2.putText(frame, 'Status: ' + text + ' detected', (10,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)
-        # frame is the image on wich the text will go. 0.5 is size of font, (0,0,255) is R,G,B color of font, 2 on end is LINE THICKNESS! OK :)
 
 
     cv2.putText(frame, datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
 
-    # show the frame
-    cv2.imshow("Video", frame)   
+    # cv2.imshow("Video", frame)   
 
     # clear the stream in preparation for the next frame
     rawCapture.truncate(0)
@@ -99,3 +106,4 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         break
     
 cv2.destroyAllWindows()
+
