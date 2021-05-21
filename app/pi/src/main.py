@@ -1,16 +1,19 @@
 from Firebase import Firebase
-# from Firebase import Firestore
+from Firebase import Firestore
 from Firebase import Messaging
 from Firebase import Storage
 from time import sleep
 import sys
 
+from firebase_admin import firestore
+
+
 def main():
     Firebase.init()
+    settings = Firestore.getSettings()
     
     # Module tests:
-    # print(Firestore.getSettings())
-    # Messaging.sendPush('Title', 'Message', ['d64z9k3JPgRHUndOvefo0k:APA91bH5juBsWAEhWRfZs4vkoBLpZXdcMJN4vxLi1MxfLpbHUmvHXMA6SQWt_uVfwfVygMCnOB6YDhM12P8-16mGmktZ1p0cb-bWoXv7bRUtJe5Ktwd3rqC_aBE20Gk-K7Y7dI2YtM-q'])
+    # Messaging.sendPush('Title', 'Message', settings['registrationTokens'])
     # Storage.uploadFile('main.py', 'main.py')
 
 try:
