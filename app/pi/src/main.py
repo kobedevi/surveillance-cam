@@ -1,14 +1,12 @@
-import Camera
-import Firebase
-from Motion import Motion
-import Firebase.FCMManager
+import Firebase.initFirebase
+from Firebase.FCMManager import sendPush
+from Firebase.Storage import uploadFile
 from time import sleep
 import sys
 
 def main():
-    # pir = Motion(4)
-    # pir.start()
-    pass
+    # sendPush('Title', 'Message', [])
+    uploadFile('main.py', 'main.py')
 
 try:
     main()
