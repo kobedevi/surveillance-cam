@@ -8,6 +8,7 @@ Jonas Di Dier
 
 ## Motion detection
 - pip install opencv-python or pip install opencv-contrib-python
+- sudo apt install -y gpac
 
 ## possible errors:
 - **Error:** ImportError: libcblas.so.3: cannot open shared object file: No such file or directory  
