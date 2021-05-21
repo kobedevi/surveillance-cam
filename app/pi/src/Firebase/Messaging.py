@@ -1,21 +1,22 @@
 from firebase_admin import messaging
 
-def sendPush(title, msg, registration_tokens, dataObject = None):
-    # See documentation on defining a message payload.
+def sendPush(title, msg, registration_tokens):
+    # Define message payload
     message = messaging.MulticastMessage(
         notification = messaging.Notification(
             title = title,
             body = msg,
         ),
-        data = dataObject,
         tokens = registration_tokens,
     )
 
-    # Send a message to the device corresponding to the provided registration token.
+    # Send a message to the devices corresponding to the provided registration tokens
     response = messaging.send_multicast(message)
-    # Response is a message ID string.
+
+    # Response is a message ID string
     print('Successfully sent message:', response)
 
+    # Show failed tokens
     if response.failure_count > 0:
         responses = response.responses
         failed_tokens = []
