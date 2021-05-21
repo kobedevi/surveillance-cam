@@ -1,12 +1,14 @@
 # import the necessary packages
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+import subprocess
 import threading
 import time
 import datetime
 import cv2
 import numpy as np
 import os
+
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -22,6 +24,8 @@ recording = False
 
 
 def capture(frames, motion_thresh, is_recording):
+    # using picamera since it's easier to record on
+    # disadvantage is losing all info of the cv2 version
     if frames == motion_thresh :
         global recording
         dirname = os.path.dirname(__file__)
@@ -31,11 +35,30 @@ def capture(frames, motion_thresh, is_recording):
         # RECORD
         if recording == False:
             recording = True
-            time = datetime.datetime.now().strftime('%d%m%Y_%I-%M-%S')
+            time = datetime.datetime.now().strftime('%d-%m-%Y_%I-%M-%S')
             camera.start_recording(filename + time + '.h264')
-            camera.wait_recording(5)
+
+            # start time
+            start = datetime.datetime.now()
+            # text size, affects mask, sadly
+            camera.annotate_text_size = 15
+            # while loop to update video annotation
+            while (datetime.datetime.now() - start).seconds < 5:
+                camera.annotate_text = datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p')
+                camera.wait_recording(0.2)
             camera.stop_recording()
+            camera.annotate_text = ""
+
+
+            # camera.annotate_text = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            # camera.wait_recording(5)
+            # camera.stop_recording()
             recording = False
+            # # Convert the h264 format to the mp4 format
+            command = "MP4Box -add " + "out/" + str(time) + ".h264 out/" + str(time) + ".mp4"
+            subprocess.call([command], shell=True)
+            print("\r\nRasp_Pi => Video Converted! \r\n")
+
         else: 
             pass
 
@@ -70,7 +93,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     thresh = cv2.dilate(thresh, None, iterations=2)
     
     # show the result
-    # cv2.imshow("Delta + Thresh", thresh)
+    cv2.imshow("Delta + Thresh", thresh)
 
     # find contours or continuous white blobs in the image
     contours, hierarchy = cv2.findContours(thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -95,7 +118,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 
     cv2.putText(frame, datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
 
-    # cv2.imshow("Video", frame)   
+    cv2.imshow("Video", frame)   
 
     # clear the stream in preparation for the next frame
     rawCapture.truncate(0)
