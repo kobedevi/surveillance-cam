@@ -47,18 +47,12 @@ def capture(frames, motion_thresh, is_recording):
                 camera.annotate_text = datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p')
                 camera.wait_recording(0.2)
             camera.stop_recording()
-            camera.annotate_text = ""
-
-
-            # camera.annotate_text = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            # camera.wait_recording(5)
-            # camera.stop_recording()
             recording = False
+            camera.annotate_text = ""
             # # Convert the h264 format to the mp4 format
             command = "MP4Box -add " + "out/" + str(time) + ".h264 out/" + str(time) + ".mp4"
             subprocess.call([command], shell=True)
-            print("\r\nRasp_Pi => Video Converted! \r\n")
-
+            os.remove("out/" + time + ".h264")
         else: 
             pass
 
