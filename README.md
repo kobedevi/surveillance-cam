@@ -2,8 +2,8 @@
 
 ## Team
 
-Kobe Devillé
-Dante Weverbergh
+Kobe Devillé  
+Dante Weverbergh  
 Jonas Di Dier
 
 ## Motion detection
