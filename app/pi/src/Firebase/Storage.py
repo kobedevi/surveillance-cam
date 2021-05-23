@@ -3,6 +3,9 @@ from google.cloud import storage
 import os
 
 def uploadFile(sourceFileName, destinationFileName):
+    # TODO: Default destination filename to source filename
+    # TODO: Return storage filename
+    
     storage_client = storage.Client.from_service_account_json(os.path.abspath("Firebase/serviceAccountKey.json"));
     bucket = storage_client.bucket('iot-werkstuk.appspot.com')
     blob = bucket.blob(destinationFileName)

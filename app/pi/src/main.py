@@ -5,14 +5,12 @@ from Firebase import Storage
 from time import sleep
 import sys
 
-from firebase_admin import firestore
-
-
 def main():
     Firebase.init()
-    settings = Firestore.getSettings()
     
     # Module tests:
+    # settings = Firestore.getSettings()
+    # Firestore.storeVideo('test.mp4', datetime.now())
     # Messaging.sendPush('Title', 'Message', settings['registrationTokens'])
     # Storage.uploadFile('main.py', 'main.py')
 

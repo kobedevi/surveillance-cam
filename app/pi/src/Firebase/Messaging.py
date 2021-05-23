@@ -25,3 +25,4 @@ def sendPush(title, msg, registration_tokens):
                 # The order of responses corresponds to the order of the registration tokens.
                 failed_tokens.append(registration_tokens[idx])
         print('List of tokens that caused failures: {0}'.format(failed_tokens))
+        # TODO: Remove failed tokens from firestore
