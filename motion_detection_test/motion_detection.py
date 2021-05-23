@@ -9,6 +9,8 @@ import cv2
 import numpy as np
 import os
 
+from '../app/pi/src/Firebase' import Storage
+
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
