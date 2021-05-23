@@ -15,6 +15,8 @@ camera.resolution = (640, 480)
 camera.framerate = 30
 camera.rotation = 0
 rawCapture = PiRGBArray(camera, size = (640, 480))
+last_motion = None
+now_motion = None
 
 def start():
     # initialize the camera and grab a reference to the raw camera capture
@@ -86,11 +88,31 @@ def start():
 
 def capture(frames, motion_thresh):
     if frames == motion_thresh :
+        global last_motion
+        global now_motion
         global recording
+
         dirname = os.path.join(os.path.dirname(__file__), 'out/')
         time = datetime.datetime.now().strftime('%Y-%m%d_%I-%M-%S')
         if recording == False:
             recording = True
+
+            if last_motion is None:
+                last_motion = datetime.datetime.now()
+                now_motion = last_motion + datetime.timedelta(0,3)
+            else:
+                last_motion = now_motion
+                now_motion = datetime.datetime.now()
+            
+            time_delta = (now_motion - last_motion)
+            total_seconds = time_delta.total_seconds()
+            minutes = total_seconds/60
+
+            if minutes > 5 :
+                print("make new collection")
+            else :
+                print("add to old collection")
+            
             # PICTURE
             capturer.takePicture(camera, dirname, time)
             # RECORD
