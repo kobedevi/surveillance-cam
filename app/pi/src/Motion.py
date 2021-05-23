@@ -67,7 +67,7 @@ def start():
                 color = (0, 255, 0)
                 movement_frames += 1
                 if movement_frames >= motion_treshold:
-                    threading.Thread(target=capture, args=(movement_frames, motion_treshold, recording)).start()
+                    threading.Thread(target=capture, args=(movement_frames, motion_treshold)).start()
                     movement_frames = 0
                     
         cv2.putText(frame, 'Status: ' + text + ' detected', (10,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)
@@ -84,9 +84,7 @@ def start():
         
     cv2.destroyAllWindows()
 
-def capture(frames, motion_thresh, is_recording):
-    # using picamera since it's easier to record on
-    # disadvantage is losing all info of the cv2 version
+def capture(frames, motion_thresh):
     if frames == motion_thresh :
         global recording
         dirname = os.path.join(os.path.dirname(__file__), 'out/')

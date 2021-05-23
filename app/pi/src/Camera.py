@@ -9,9 +9,9 @@ def takePicture(camera, dirname, filename):
 	# upload photo
 	Storage.uploadFile('out/' + str(filename) + ".jpg", "photos/" + str(filename) + ".jpg")
 
+# using picamera since it's easier to record on
 def startRecording(camera, dirname, filename):
 	camera.start_recording(dirname + filename + '.h264')
-
 	# start time
 	start = datetime.datetime.now()
 	camera.annotate_text_size = 15
