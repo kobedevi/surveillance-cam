@@ -1,121 +1,117 @@
-from picamera.array import PiRGBArray
-from picamera import PiCamera
 import threading
-import time
 import datetime
 import cv2
-import os
-import Camera as capturer
 
-recording = False
-camera = PiCamera()
-camera.resolution = (640, 480)
-camera.framerate = 30
-camera.rotation = 0 # TODO: Delete (0 is default)
-rawCapture = PiRGBArray(camera, size = (640, 480))
-# last_motion = None
-# now_motion = None
+MOTION_THRESHOLD = 50 # 2 seconds @25fps
+CONTOUR_MIN_AREA = 800
 
-def start():
-    # initialize the camera and grab a reference to the raw camera capture
-    avg = None
-    motion_treshold = 60
-    movement_frames = 0
+avg = None # The initial frame to compare the other frames with
+motionFrames = 0 # Current amount of frames where motion is detected
+onMotionCallbacks = []
+onMotionEndCallbacks = []
 
-    # allow the camera to adjust to lighting/white balance
-    time.sleep(2)
+def onMotion(callback):
+    '''Add a callback to execute when motion threshold is reached
 
-    # initiate video or frame capture sequence
-    for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-        # grab the raw array representation of the image
-        frame = f.array
-        text = 'Nothing'
-        color = (0, 0, 255)
-        
-        # convert images to grayscale &  blur the result
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (21, 21), 0)
-        
-        # initialize avg if it hasn't been done
-        if avg is None:
-            avg = gray.copy().astype("float")
-            rawCapture.truncate(0)
-            continue # TODO: Unnecessary?
-        
-        # accumulate the weighted average between the current frame and
-        # previous frames, then compute the difference between the current
-        # frame and running average
-        cv2.accumulateWeighted(gray, avg, 0.05)
-        frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
+    Args:
+        callback (function): The function that will be called.
+            The time of motion will be passed as an argument
+    '''
 
-        # coonvert the difference into binary & dilate the result to fill in small holes
-        thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
-        thresh = cv2.dilate(thresh, None, iterations=2)
-        
-        # show the result
-        cv2.imshow("Delta + Thresh", thresh)
+    onMotionCallbacks.append(callback)
 
-        # find contours or continuous white blobs in the image
-        contours, hierarchy = cv2.findContours(thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-        
-        # find the index of the largest contour
-        for c in contours:
-            if cv2.contourArea(c) > 800: # if contour area is less then 800 non-zero(not-black) pixels(white)
-                (x, y, w, h) = cv2.boundingRect(c) # x,y are the top left of the contour and w,h are the width and hieght 
-                cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
-                text = 'Motion'
-                color = (0, 255, 0)
-                movement_frames += 1
-                if movement_frames >= motion_treshold:
-                    threading.Thread(target=capture, args=(movement_frames, motion_treshold)).start()
-                    movement_frames = 0
-                    
-        cv2.putText(frame, 'Status: ' + text + ' detected', (10,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)
-        cv2.putText(frame, datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
-        cv2.imshow("Video", frame)   
+def onMotionEnd(callback):
+    '''Add a callback to execute when motion threshold is reset after reaching threshold
 
-        # clear the stream in preparation for the next frame
-        rawCapture.truncate(0)
+    Args:
+        callback (function): The function that will be called.
+            The time of motion will be passed as an argument
+    '''
 
-        # if the 'q' key is pressed then break from the loop
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord('q'):
-            break
-        
-    cv2.destroyAllWindows()
+    onMotionEndCallbacks.append(callback)
 
-def capture(frames, motion_thresh):
-    if frames == motion_thresh :
-        # global last_motion
-        # global now_motion
-        global recording
+def addMotionFrame():
+    '''Increment motion frames and call callbacks if threshold is reached'''
 
-        dirname = os.path.join(os.path.dirname(__file__), 'out/')
+    motionFrames += 1
+
+    # Check if threshold is reached (i.e. motion detected)
+    if (motionFrames = MOTION_THRESHOLD):
+        # Execute subscribers with time of motion
         time = datetime.datetime.now()
-        # time = datetime.datetime.now().strftime('%Y-%m%d_%I-%M-%S')
+        for callback in onMotionCallbacks:
+            threading.Thread(target=callback, args=(time)).start()
 
-        if recording == False:
-            recording = True
-
-            # if last_motion is None:
-            #     last_motion = datetime.datetime.now()
-            #     now_motion = last_motion + datetime.timedelta(0,3)
-            # else:
-            #     last_motion = now_motion
-            #     now_motion = datetime.datetime.now()
+def resetMotionFrames():
+    '''Reset motion frames and call callbacks if threshold was reached'''
+    
+    if (motionFrames >= MOTION_THRESHOLD):
+        for callback in onMotionEndCallbacks:
+            threading.Thread(target=callback).start()
             
-            # time_delta = (now_motion - last_motion)
-            # total_seconds = time_delta.total_seconds()
-            # minutes = total_seconds/60
+    motionFrames = 0
 
-            # if minutes > 5 :
-            #     print("make new collection")
-            # else :
-            #     print("add to old collection")
-            
-            # PICTURE
-            capturer.takePicture(camera, dirname, time)
-            # RECORD
-            recording = capturer.startRecording(camera, dirname, time)
-            # TODO: Don't return False from startRecording? Set to False here:
-            # recording = False
+def checkForMotion(frame):
+    '''Compares the current frame with the average frame and
+    increments motion frames if the difference exceeds CONTOUR_MIN_AREA.
+    If no average is set, it will use the frame to set the initial average.
+
+    Args:
+        frame (array): The array returned when reading PiArrayOutput.array.
+    '''
+
+    # text = 'Nothing'
+    # color = (0, 0, 255)
+
+    # Convert frame to grayscale and blur
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (21, 21), 0)
+
+    # Set the first frame as average
+    if avg is None:
+        avg = gray.copy().astype("float")
+        rawCapture.truncate(0)
+        return
+    
+    # Find the absolute difference between average and current frame
+    cv2.accumulateWeighted(gray, avg, 0.05)
+    frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
+
+    # Threshold and dilate the difference
+    thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.dilate(thresh, None, iterations=2)
+    
+    # show the result
+    # cv2.imshow("Delta + Thresh", thresh)
+
+    # Find contours
+    contours, hierarchy = cv2.findContours(thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+
+    # Reset counter when no motion is detected
+    if len(contours) == 0:
+        resetMotionFrames()
+        return
+    
+    # find the index of the largest contour
+    for c in contours:
+        if cv2.contourArea(c) > CONTOUR_MIN_AREA:
+            # (x, y, w, h) = cv2.boundingRect(c) # x,y are the top left of the contour and w,h are the width and hieght 
+            # cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
+            # text = 'Motion'
+            # color = (0, 255, 0)
+            # movement_frames += 1
+            # if movement_frames >= motion_treshold:
+            #     movement_frames = 0
+            addMotionFrame()
+            break
+                
+    # cv2.putText(frame, 'Status: ' + text + ' detected', (10,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)
+    # cv2.putText(frame, datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
+    # cv2.imshow("Video", frame)   
+
+
+    # if the 'q' key is pressed then break from the loop
+    # key = cv2.waitKey(1) & 0xFF
+    # if key == ord('q'):
+    #     break
+    

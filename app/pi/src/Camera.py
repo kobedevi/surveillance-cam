@@ -1,11 +1,43 @@
-import time
-import datetime
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+from datetime import datetime
+from time import sleep
 import subprocess
 import os
 from Firebase import Firestore
 from Firebase import Storage
+import Motion
 
-def takePicture(camera, dirname, time):
+# Set up camera
+camera = PiCamera()
+camera.resolution = (640, 480)
+camera.framerate = 25
+camera.annotate_text_size = 15
+rawCapture = PiRGBArray(camera, size = (640, 480))
+
+def start():
+	# Allow the camera to adjust to lighting/white balance
+	sleep(2)
+	
+	# Show timestamp
+	while True:
+		camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
+		camera.wait_recording(0.5)
+
+    # Add callbacks to call when motion is detected
+    Motion.onMotion(takePicture)
+    Motion.onMotion(startRecording)
+    Motion.onMotionEnd(stopRecording)
+
+	# Start capturing frames
+	for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+		Motion.checkForMotion(f.array)
+
+        # Clear the stream in preparation for the next frame
+        rawCapture.truncate(0)
+
+def takePicture(time):
+    dirname = os.path.join(os.path.dirname(__file__), 'out/')
 	filename = time.strftime('%Y%m%dT%H%M%S') + '.jpg'
 
 	# Take picture
@@ -15,39 +47,24 @@ def takePicture(camera, dirname, time):
 	Storage.uploadFile('out/' + filename, 'photos/' + filename)
 	Firestore.addFileToDocument(filename, 'photos', time)
 
-# Using picamera since it's easier to record on
-def startRecording(camera, dirname, time):
+def startRecording(time):
+    dirname = os.path.join(os.path.dirname(__file__), 'out/')
 	filename = time.strftime('%Y%m%dT%H%M%S')
 
-	# Start recording
 	camera.start_recording(dirname + filename + '.h264')
 
-	start = datetime.datetime.now()
-	camera.annotate_text_size = 15 # TODO: Move to Motion.py (under camera.rotation etc)?
-
-	# While loop to update video annotation
-	while (datetime.datetime.now() - start).seconds < 5:
-		camera.annotate_text = datetime.datetime.now().strftime('%A %d %B %Y %H:%M:%S')
-		camera.wait_recording(0.2)
-
-	# Stop recording
+def stopRecording():
 	camera.stop_recording()
-	camera.annotate_text = ''
 	
 	# Convert h264 to mp4
 	convert(filename)
 
 	# Upload video
-	Storage.uploadFile('out/' + str(filename) + '.mp4', 'videos/' + str(filename) + '.mp4')
+	Storage.uploadFile('out/' + filename + '.mp4', 'videos/' + filename + '.mp4')
 	Firestore.addFileToDocument(filename, 'videos', time)
-
-	return False
 
 def convert(filename) :
 	# Convert the h264 format to the mp4 format
 	command = 'MP4Box -add ' + 'out/' + filename + '.h264 out/' + filename + '.mp4'
 	subprocess.call([command], shell=True)
 	os.remove('out/' + filename + '.h264')
-
-def isRecording():
-  	pass
