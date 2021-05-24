@@ -32,19 +32,20 @@ def onMotionEnd(callback):
 
 def addMotionFrame():
     '''Increment motion frames and call callbacks if threshold is reached'''
-
+    global motionFrames
     motionFrames += 1
 
     # Check if threshold is reached (i.e. motion detected)
-    if (motionFrames = MOTION_THRESHOLD):
+    if (motionFrames == MOTION_THRESHOLD):
         # Execute subscribers with time of motion
         time = datetime.datetime.now()
         for callback in onMotionCallbacks:
-            threading.Thread(target=callback, args=(time)).start()
+            threading.Thread(target=callback, args=(time,)).start()
 
 def resetMotionFrames():
     '''Reset motion frames and call callbacks if threshold was reached'''
     
+    global motionFrames
     if (motionFrames >= MOTION_THRESHOLD):
         for callback in onMotionEndCallbacks:
             threading.Thread(target=callback).start()
@@ -52,6 +53,8 @@ def resetMotionFrames():
     motionFrames = 0
 
 def checkForMotion(frame):
+    global motionFrames
+    print(motionFrames)
     '''Compares the current frame with the average frame and
     increments motion frames if the difference exceeds CONTOUR_MIN_AREA.
     If no average is set, it will use the frame to set the initial average.
@@ -68,9 +71,9 @@ def checkForMotion(frame):
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
     # Set the first frame as average
+    global avg
     if avg is None:
         avg = gray.copy().astype("float")
-        rawCapture.truncate(0)
         return
     
     # Find the absolute difference between average and current frame

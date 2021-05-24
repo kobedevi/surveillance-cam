@@ -13,32 +13,43 @@ camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 25
 camera.annotate_text_size = 15
-rawCapture = PiRGBArray(camera, size = (640, 480))
+rawCapture = PiRGBArray(camera, size = camera.resolution)
+timeOfMotion = None
 
 def start():
 	# Allow the camera to adjust to lighting/white balance
-	sleep(2)
+	# sleep(2)
 	
-	# Show timestamp
-	while True:
-		camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
-		camera.wait_recording(0.5)
+	addAnnotation()
 
-    # Add callbacks to call when motion is detected
-    Motion.onMotion(takePicture)
-    Motion.onMotion(startRecording)
-    Motion.onMotionEnd(stopRecording)
+	# Add callbacks to call when motion is detected
+	Motion.onMotion(takePicture)
+	Motion.onMotion(startRecording)
+	Motion.onMotion(setTimeOfMotion)
+	Motion.onMotionEnd(stopRecording)
 
 	# Start capturing frames
 	for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 		Motion.checkForMotion(f.array)
+		# Clear the stream in preparation for the next frame
+		rawCapture.truncate(0)
 
-        # Clear the stream in preparation for the next frame
-        rawCapture.truncate(0)
+def setTimeOfMotion(time):
+  global timeOfMotion
+  timeOfMotion = time
+
+def addAnnotation():
+	# Show timestamp
+	global camera
+	camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
+
+	# while True:
+	# 	camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
+	# 	camera.wait_recording(0.5)
 
 def takePicture(time):
-    dirname = os.path.join(os.path.dirname(__file__), 'out/')
-	filename = time.strftime('%Y%m%dT%H%M%S') + '.jpg'
+	dirname = os.path.join(os.path.dirname(__file__), 'out/')
+	filename = getFilenameFromTime(time, '.jpg')
 
 	# Take picture
 	camera.capture(dirname + filename)
@@ -48,23 +59,31 @@ def takePicture(time):
 	Firestore.addFileToDocument(filename, 'photos', time)
 
 def startRecording(time):
-    dirname = os.path.join(os.path.dirname(__file__), 'out/')
-	filename = time.strftime('%Y%m%dT%H%M%S')
+	dirname = os.path.join(os.path.dirname(__file__), 'out/')
+	filename = getFilenameFromTime(time)
 
 	camera.start_recording(dirname + filename + '.h264')
 
 def stopRecording():
+	global camera
+	global timeOfMotion
+	if (not camera.recording):
+		return
 	camera.stop_recording()
-	
+
 	# Convert h264 to mp4
+	filename = getFilenameFromTime(timeOfMotion)
 	convert(filename)
 
 	# Upload video
-	Storage.uploadFile('out/' + filename + '.mp4', 'videos/' + filename + '.mp4')
-	Firestore.addFileToDocument(filename, 'videos', time)
+	Storage.uploadFile('out/' + timeOfMotion + '.mp4', 'videos/' + filename + '.mp4')
+	Firestore.addFileToDocument(filename + '.mp4', 'videos', timeOfMotion)
 
 def convert(filename) :
 	# Convert the h264 format to the mp4 format
 	command = 'MP4Box -add ' + 'out/' + filename + '.h264 out/' + filename + '.mp4'
 	subprocess.call([command], shell=True)
 	os.remove('out/' + filename + '.h264')
+
+def getFilenameFromTime(time, ext=''):
+	return time.strftime('%Y%m%dT%H%M%S') + ext
