@@ -5,18 +5,16 @@ import time
 import datetime
 import cv2
 import os
-from Firebase import Firebase
 import Camera as capturer
 
 recording = False
-Firebase.init()
 camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 30
-camera.rotation = 0
+camera.rotation = 0 # TODO: Delete (0 is default)
 rawCapture = PiRGBArray(camera, size = (640, 480))
-last_motion = None
-now_motion = None
+# last_motion = None
+# now_motion = None
 
 def start():
     # initialize the camera and grab a reference to the raw camera capture
@@ -34,7 +32,7 @@ def start():
         text = 'Nothing'
         color = (0, 0, 255)
         
-        # convert imags to grayscale &  blur the result
+        # convert images to grayscale &  blur the result
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
         
@@ -42,7 +40,7 @@ def start():
         if avg is None:
             avg = gray.copy().astype("float")
             rawCapture.truncate(0)
-            continue
+            continue # TODO: Unnecessary?
         
         # accumulate the weighted average between the current frame and
         # previous frames, then compute the difference between the current
@@ -88,32 +86,36 @@ def start():
 
 def capture(frames, motion_thresh):
     if frames == motion_thresh :
-        global last_motion
-        global now_motion
+        # global last_motion
+        # global now_motion
         global recording
 
         dirname = os.path.join(os.path.dirname(__file__), 'out/')
-        time = datetime.datetime.now().strftime('%Y-%m%d_%I-%M-%S')
+        time = datetime.datetime.now()
+        # time = datetime.datetime.now().strftime('%Y-%m%d_%I-%M-%S')
+
         if recording == False:
             recording = True
 
-            if last_motion is None:
-                last_motion = datetime.datetime.now()
-                now_motion = last_motion + datetime.timedelta(0,3)
-            else:
-                last_motion = now_motion
-                now_motion = datetime.datetime.now()
+            # if last_motion is None:
+            #     last_motion = datetime.datetime.now()
+            #     now_motion = last_motion + datetime.timedelta(0,3)
+            # else:
+            #     last_motion = now_motion
+            #     now_motion = datetime.datetime.now()
             
-            time_delta = (now_motion - last_motion)
-            total_seconds = time_delta.total_seconds()
-            minutes = total_seconds/60
+            # time_delta = (now_motion - last_motion)
+            # total_seconds = time_delta.total_seconds()
+            # minutes = total_seconds/60
 
-            if minutes > 5 :
-                print("make new collection")
-            else :
-                print("add to old collection")
+            # if minutes > 5 :
+            #     print("make new collection")
+            # else :
+            #     print("add to old collection")
             
             # PICTURE
             capturer.takePicture(camera, dirname, time)
             # RECORD
             recording = capturer.startRecording(camera, dirname, time)
+            # TODO: Don't return False from startRecording? Set to False here:
+            # recording = False
