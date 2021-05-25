@@ -14,18 +14,16 @@ camera.resolution = (640, 480)
 camera.framerate = 25
 camera.annotate_text_size = 15
 rawCapture = PiRGBArray(camera, size = camera.resolution)
-timeOfMotion = None
 
 def start():
 	# Allow the camera to adjust to lighting/white balance
-	# sleep(2)
+	sleep(2)
 	
 	addAnnotation()
 
 	# Add callbacks to call when motion is detected
 	Motion.onMotion(takePicture)
 	Motion.onMotion(startRecording)
-	Motion.onMotion(setTimeOfMotion)
 	Motion.onMotionEnd(stopRecording)
 
 	# Start capturing frames
@@ -34,18 +32,11 @@ def start():
 		# Clear the stream in preparation for the next frame
 		rawCapture.truncate(0)
 
-def setTimeOfMotion(time):
-  global timeOfMotion
-  timeOfMotion = time
-
 def addAnnotation():
-	# Show timestamp
 	global camera
-	camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
 
-	# while True:
-	# 	camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
-	# 	camera.wait_recording(0.5)
+	# Show timestamp
+	camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
 
 def takePicture(time):
 	dirname = os.path.join(os.path.dirname(__file__), 'out/')
@@ -64,20 +55,20 @@ def startRecording(time):
 
 	camera.start_recording(dirname + filename + '.h264')
 
-def stopRecording():
+def stopRecording(time):
 	global camera
-	global timeOfMotion
+
 	if (not camera.recording):
 		return
 	camera.stop_recording()
 
 	# Convert h264 to mp4
-	filename = getFilenameFromTime(timeOfMotion)
+	filename = getFilenameFromTime(time)
 	convert(filename)
 
 	# Upload video
 	Storage.uploadFile('out/' + filename + '.mp4', 'videos/' + filename + '.mp4')
-	Firestore.addFileToDocument(filename + '.mp4', 'videos', timeOfMotion)
+	Firestore.addFileToDocument(filename + '.mp4', 'videos', time)
 
 def convert(filename) :
 	# Convert the h264 format to the mp4 format

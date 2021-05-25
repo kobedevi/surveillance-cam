@@ -10,6 +10,7 @@ motionFrames = 0 # Current amount of frames where motion is detected
 noMotionFrames = 0 # Current amount of frames where no motion is detected
 onMotionCallbacks = [] # Callbacks to execute when motionFrames reaches threshold
 onMotionEndCallbacks = [] # Callbacks to execute when noMotionFrames reaches threshold
+timeOfMotion = None # Time when current motion started
 
 def onMotion(callback):
     '''Add a callback to execute when motion threshold is reached
@@ -36,16 +37,17 @@ def addMotionFrame():
 
     global motionFrames
     global noMotionFrames
-    
+    global timeOfMotion
+
     motionFrames += 1
     noMotionFrames = 0
 
     # Check if threshold is reached (i.e. motion detected)
     if (motionFrames == MOTION_THRESHOLD):
         # Execute callbacks with time of motion
-        time = datetime.now()
+        timeOfMotion = datetime.now()
         for callback in onMotionCallbacks:
-            threading.Thread(target=callback, args=(time,)).start()
+            threading.Thread(target=callback, args=(timeOfMotion,)).start()
 
 def resetMotionFrames():
     '''Reset motion frames and call callbacks if threshold was reached
@@ -53,6 +55,7 @@ def resetMotionFrames():
     '''
     
     global noMotionFrames
+    global timeOfMotion
 
     # If there is currently motion detected
     if (motionFrames >= MOTION_THRESHOLD):
@@ -62,7 +65,7 @@ def resetMotionFrames():
         if (noMotionFrames == MOTION_THRESHOLD):  
             # Execute callbacks with time of motion      
             for callback in onMotionEndCallbacks:
-                threading.Thread(target=callback).start()
+                threading.Thread(target=callback, args=(timeOfMotion,)).start()
             
             # Reset motion frames
             motionFrames = 0
