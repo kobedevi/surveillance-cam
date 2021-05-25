@@ -12,7 +12,7 @@ Jonas Di Dier
 
 ## Hoe camera installeren
 Verdere instructies: https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2
- - Verbind camera ![How to install camera](https://projects-static.raspberrypi.org/projects/getting-started-with-picamera/e700e884354667bc3db3dddc19e20931a787c9a7/en/images/connect-camera.gif)
+ - Verbind camera met pi
  - Go naar het hoofdmenu > Preferences > Raspberr Pi Configuration
  - Selecteer de interfaces tab en zet de Camera optie op enabled 
  - Herstart de pi
