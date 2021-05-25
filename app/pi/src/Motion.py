@@ -23,9 +23,6 @@ def checkForMotion(frame):
         frame (array): The array returned when reading PiArrayOutput.array.
     '''
 
-    # text = 'Nothing'
-    # color = (0, 0, 255)
-
     # Convert frame to grayscale and blur
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
@@ -58,24 +55,9 @@ def checkForMotion(frame):
     # find the index of the largest contour
     for c in contours:
         if cv2.contourArea(c) > CONTOUR_MIN_AREA:
-            # (x, y, w, h) = cv2.boundingRect(c) # x,y are the top left of the contour and w,h are the width and hieght 
-            # cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
-            # text = 'Motion'
-            # color = (0, 255, 0)
-            # movement_frames += 1
-            # if movement_frames >= motion_treshold:
-            #     movement_frames = 0
             handleMotionFrame()
             break
-    # cv2.putText(frame, 'Status: ' + text + ' detected', (10,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)
-    # cv2.putText(frame, datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
-    # cv2.imshow("Video", frame)   
 
-
-    # if the 'q' key is pressed then break from the loop
-    # key = cv2.waitKey(1) & 0xFF
-    # if key == ord('q'):
-    #     break
 
 def handleMotionFrame():
     '''Increment motionFrames. Execute callbacks if threshold is reached'''
@@ -96,9 +78,9 @@ def handleMotionFrame():
 
 def handleNoMotionFrame():
     '''Increment noMotionFrames. Execute callbacks and reset if threshold is reached
-        No-op if motionFrames has not reached threshold (i.e. currently no motion)
+        Resets if motionFrames has not reached threshold (i.e. currently no motion)
     '''
-    
+    global motionFrames
     global noMotionFrames
     global timeOfMotion
 
@@ -115,6 +97,8 @@ def handleNoMotionFrame():
             # Reset motion frames
             motionFrames = 0
             noMotionFrames = 0
+    else: 
+        motionFrames = 0
 
 def onMotion(callback):
     '''Add a callback to execute when motion threshold is reached
