@@ -1,11 +1,7 @@
 # Werkstuk Examen IoT
 
-## Motion detection camera met dashboard
-We gebruiken een camera verbonden met de pi, de pi zal beginnen opnemen zodra er beweging wordt opgemerkt.
-Deze video wordt dan opgeslagen in firebase en de gebruiker krijgt een notificatie op de app.
-Op de app kan de gebruiker de beelden herbekijken en het alarm in/uit schakelen
-
 ## Team
+
 Kobe Devillé  
 Dante Weverbergh  
 Jonas Di Dier
@@ -21,21 +17,35 @@ Verdere instructies: https://projects.raspberrypi.org/en/projects/getting-starte
  - Selecteer de interfaces tab en zet de Camera optie op enabled 
  - Herstart de pi
 
-## Run volgende commands
+## Motion detection
+- pip install opencv-python or pip install opencv-contrib-python
+- sudo apt install -y gpac
+
+## Possible errors:
+
+- **Error:** ImportError: libcblas.so.3: cannot open shared object file: No such file or directory  
+  **Solution:**
+  ```
+  pip3 install opencv-python
+  sudo apt-get install libcblas-dev
+  sudo apt-get install libhdf5-dev
+  sudo apt-get install libhdf5-serial-dev
+  sudo apt-get install libatlas-base-dev
+  sudo apt-get install libjasper-dev
+  sudo apt-get install libqtgui4
+  sudo apt-get install libqt4-test
+  ```
+
+## Login details
+
+Email:
+
 ```
-pip3 install opencv-python -U
+user@iot.com
+```
 
-pip install firebase -U
+Password:
 
-pip install firebase-admin -U
-
-sudo apt-get install libcblas-dev
-sudo apt-get install libhdf5-dev 
-sudo apt-get install libhdf5-serial-dev 
-sudo apt-get install libatlas-base-dev
-sudo apt-get install libjasper-dev
-sudo apt-get install libqtgui4
-sudo apt-get install libqt4-test -y
-
-sudo apt-get install -y gpac
+```
+password
 ```

@@ -12,8 +12,10 @@ const App = () => {
         <pre>{JSON.stringify(firebase.apps[0].options, null, 2)}</pre>
       </code>
 
+      {/** 
       {token && <p>{token}</p>}
       {error && <p>{error}</p>}
+      */}
     </>
   );
 };
