@@ -1,56 +1,16 @@
-import threading
-import datetime
 import cv2
+import threading
+from datetime import datetime
 
-MOTION_THRESHOLD = 50 # 2 seconds @25fps
-CONTOUR_MIN_AREA = 800
+MOTION_THRESHOLD = 50 # Number of consecutive frames where motion is detected
+CONTOUR_MIN_AREA = 800 # Minimum contour area to qualify as motion (cv2.findContours())
 
 avg = None # The initial frame to compare the other frames with
 motionFrames = 0 # Current amount of frames where motion is detected
-onMotionCallbacks = []
-onMotionEndCallbacks = []
-
-def onMotion(callback):
-    '''Add a callback to execute when motion threshold is reached
-
-    Args:
-        callback (function): The function that will be called.
-            The time of motion will be passed as an argument
-    '''
-
-    onMotionCallbacks.append(callback)
-
-def onMotionEnd(callback):
-    '''Add a callback to execute when motion threshold is reset after reaching threshold
-
-    Args:
-        callback (function): The function that will be called.
-            The time of motion will be passed as an argument
-    '''
-
-    onMotionEndCallbacks.append(callback)
-
-def addMotionFrame():
-    '''Increment motion frames and call callbacks if threshold is reached'''
-    global motionFrames
-    motionFrames += 1
-
-    # Check if threshold is reached (i.e. motion detected)
-    if (motionFrames == MOTION_THRESHOLD):
-        # Execute subscribers with time of motion
-        time = datetime.datetime.now()
-        for callback in onMotionCallbacks:
-            threading.Thread(target=callback, args=(time,)).start()
-
-def resetMotionFrames():
-    '''Reset motion frames and call callbacks if threshold was reached'''
-    
-    global motionFrames
-    if (motionFrames >= MOTION_THRESHOLD):
-        for callback in onMotionEndCallbacks:
-            threading.Thread(target=callback).start()
-            
-    motionFrames = 0
+noMotionFrames = 0 # Current amount of frames where no motion is detected
+onMotionCallbacks = [] # Callbacks to execute when motionFrames reaches threshold
+onMotionEndCallbacks = [] # Callbacks to execute when noMotionFrames reaches threshold
+timeOfMotion = None # Time when current motion started
 
 def checkForMotion(frame):
     global motionFrames
@@ -88,11 +48,11 @@ def checkForMotion(frame):
     # cv2.imshow("Delta + Thresh", thresh)
 
     # Find contours
-    contours, hierarchy = cv2.findContours(thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     # Reset counter when no motion is detected
     if len(contours) == 0:
-        resetMotionFrames()
+        handleNoMotionFrame()
         return
     
     # find the index of the largest contour
@@ -105,10 +65,10 @@ def checkForMotion(frame):
             # movement_frames += 1
             # if movement_frames >= motion_treshold:
             #     movement_frames = 0
-            addMotionFrame()
+            handleMotionFrame()
             break
     # cv2.putText(frame, 'Status: ' + text + ' detected', (10,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)
-    # cv2.putText(frame, datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
+    # cv2.putText(frame, datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
     # cv2.imshow("Video", frame)   
 
 
@@ -116,4 +76,62 @@ def checkForMotion(frame):
     # key = cv2.waitKey(1) & 0xFF
     # if key == ord('q'):
     #     break
+
+def handleMotionFrame():
+    '''Increment motionFrames. Execute callbacks if threshold is reached'''
+
+    global motionFrames
+    global noMotionFrames
+    global timeOfMotion
+
+    motionFrames += 1
+    noMotionFrames = 0
+
+    # Check if threshold is reached (i.e. motion detected)
+    if (motionFrames == MOTION_THRESHOLD):
+        # Execute callbacks with time of motion
+        timeOfMotion = datetime.now()
+        for callback in onMotionCallbacks:
+            threading.Thread(target=callback, args=(timeOfMotion,)).start()
+
+def handleNoMotionFrame():
+    '''Increment noMotionFrames. Execute callbacks and reset if threshold is reached
+        No-op if motionFrames has not reached threshold (i.e. currently no motion)
+    '''
     
+    global noMotionFrames
+    global timeOfMotion
+
+    # If there is currently motion detected
+    if (motionFrames >= MOTION_THRESHOLD):
+        noMotionFrames += 1
+
+        # Check if threshold is reached (i.e. motion ended)
+        if (noMotionFrames == MOTION_THRESHOLD):  
+            # Execute callbacks with time of motion      
+            for callback in onMotionEndCallbacks:
+                threading.Thread(target=callback, args=(timeOfMotion,)).start()
+            
+            # Reset motion frames
+            motionFrames = 0
+            noMotionFrames = 0
+
+def onMotion(callback):
+    '''Add a callback to execute when motion threshold is reached
+
+    Args:
+        callback (function): The function that will be called.
+            The time of motion will be passed as an argument
+    '''
+
+    onMotionCallbacks.append(callback)
+
+def onMotionEnd(callback):
+    '''Add a callback to execute when motion threshold is reset after reaching threshold
+
+    Args:
+        callback (function): The function that will be called.
+            The time of motion will be passed as an argument
+    '''
+
+    onMotionEndCallbacks.append(callback)
