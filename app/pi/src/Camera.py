@@ -8,17 +8,14 @@ from Firebase import Firestore
 from Firebase import Storage
 import Motion
 
-# Set up camera
-camera = PiCamera()
-camera.resolution = (640, 480)
-camera.framerate = 25
-camera.annotate_text_size = 15
-rawCapture = PiRGBArray(camera, size = camera.resolution)
+camera = None
 
 def start():
+	init()
 	# Allow the camera to adjust to lighting/white balance
 	sleep(2)
 	
+	# camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
 	addAnnotation()
 
 	# Add callbacks to call when motion is detected
@@ -26,6 +23,7 @@ def start():
 	Motion.onMotion(startRecording)
 	Motion.onMotionEnd(stopRecording)
 
+	rawCapture = PiRGBArray(camera, size = camera.resolution)
 	# Start capturing frames
 	for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 		Motion.checkForMotion(f.array)
@@ -33,18 +31,26 @@ def start():
 		rawCapture.truncate(0)
 
 def stop():
-	camera.stop()
+	camera.close()
+
+# Set up camera
+def init():
+	global camera
+	camera = PiCamera()
+	camera.resolution = (640, 480)
+	camera.framerate = 25
+	camera.annotate_text_size = 15
 
 def addAnnotation():
-	def addTimestamp():
-		global camera
-	
-		# Show timestamp
-		while True:
-			camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
-			camera.wait_recording(0.5)
+	# def addTimestamp():
+	global camera
 
-	threading.Thread(target=addTimestamp).start()
+	# Show timestamp
+	while camera.recording == True:
+		camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
+		camera.wait_recording(0.3)
+	else :
+		camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
 
 def takePicture(time):
 	dirname = os.path.join(os.path.dirname(__file__), 'out/')
@@ -62,12 +68,14 @@ def startRecording(time):
 	filename = getFilenameFromTime(time)
 
 	camera.start_recording(dirname + filename + '.h264')
+	addAnnotation()
 
 def stopRecording(time):
 	global camera
 
 	if (not camera.recording):
 		return
+	
 	camera.stop_recording()
 
 	# Convert h264 to mp4

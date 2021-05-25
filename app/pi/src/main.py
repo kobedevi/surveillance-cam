@@ -11,15 +11,15 @@ def main():
     
     # Module tests:
     Camera.start()
+    # Camera.stop()
+    
     # settings = Firestore.getSettings()
-    # Firestore.storeVideo('test.mp4', datetime.now())
     # Messaging.sendPush('Title', 'Message', settings['registrationTokens'])
-    # Storage.uploadFile('main.py', 'main.py')
 
 try:
     main()
 except (KeyboardInterrupt, SystemExit):
     print('Exiting program')
 finally:
-    Camera.close()
+    Camera.stop()
     sys.exit(0)
