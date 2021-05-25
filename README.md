@@ -7,8 +7,14 @@ Dante Weverbergh
 Jonas Di Dier
 
 ## App login
-**E-mail**: user@iot.com  
-**Wachtwoord**: password
+**Email:**  
+```
+user@iot.com
+```
+**Password:**  
+```
+password
+```
 
 ## Hoe camera installeren
 Verdere instructies: https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2
@@ -35,17 +41,3 @@ Verdere instructies: https://projects.raspberrypi.org/en/projects/getting-starte
   sudo apt-get install libqtgui4
   sudo apt-get install libqt4-test
   ```
-
-## Login details
-
-Email:
-
-```
-user@iot.com
-```
-
-Password:
-
-```
-password
-```

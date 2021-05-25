@@ -1,0 +1,29 @@
+.buttonSave {
+  color: white;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgb(96, 206, 119);
+  z-index: 999;
+}
+
+.buttonDelete {
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgb(77, 140, 243);
+}
+
+.btnSmall {
+  height: 50px;
+  width: 50px;
+}
+
+.btnLarge {
+  height: 200px;
+  width: 200px;
+}
