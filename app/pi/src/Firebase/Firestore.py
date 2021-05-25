@@ -45,7 +45,6 @@ def addFileToDocument(filename, field, dt):
     # Get most recent doc from firestore
     query = getCollection('camera').order_by('firstMotion', direction=firestore.Query.DESCENDING).limit(1)
     docSnapshot = query.get()
-    print(dir(docSnapshot))
     docRef = docSnapshot[0].reference if docSnapshot else createDocument(dt)
     doc = docRef.get().to_dict()
 

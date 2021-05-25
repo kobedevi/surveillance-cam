@@ -107,7 +107,6 @@ def checkForMotion(frame):
             #     movement_frames = 0
             addMotionFrame()
             break
-                
     # cv2.putText(frame, 'Status: ' + text + ' detected', (10,20), cv2.FONT_HERSHEY_SIMPLEX , 0.5, color, 2)
     # cv2.putText(frame, datetime.datetime.now().strftime('%A %d %B %Y %I:%M:%S%p'), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX , 0.35, (0, 0, 255),1) 
     # cv2.imshow("Video", frame)   

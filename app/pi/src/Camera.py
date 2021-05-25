@@ -76,7 +76,7 @@ def stopRecording():
 	convert(filename)
 
 	# Upload video
-	Storage.uploadFile('out/' + timeOfMotion + '.mp4', 'videos/' + filename + '.mp4')
+	Storage.uploadFile('out/' + filename + '.mp4', 'videos/' + filename + '.mp4')
 	Firestore.addFileToDocument(filename + '.mp4', 'videos', timeOfMotion)
 
 def convert(filename) :
