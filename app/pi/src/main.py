@@ -21,5 +21,5 @@ try:
 except (KeyboardInterrupt, SystemExit):
     print('Exiting program')
 finally:
-    # TODO: camera.close()
+    Camera.close()
     sys.exit(0)

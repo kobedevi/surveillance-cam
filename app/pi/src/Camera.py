@@ -32,11 +32,19 @@ def start():
 		# Clear the stream in preparation for the next frame
 		rawCapture.truncate(0)
 
-def addAnnotation():
-	global camera
+def stop():
+	camera.stop()
 
-	# Show timestamp
-	camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
+def addAnnotation():
+	def addTimestamp():
+		global camera
+	
+		# Show timestamp
+		while True:
+			camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
+			camera.wait_recording(0.5)
+
+	threading.Thread(target=addTimestamp).start()
 
 def takePicture(time):
 	dirname = os.path.join(os.path.dirname(__file__), 'out/')
