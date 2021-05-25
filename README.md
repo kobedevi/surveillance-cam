@@ -7,6 +7,14 @@ Dante Weverbergh
 Jonas Di Dier
 
 ## App login
+**Email:**  
+```
+user@iot.com
+```
+**Password:**  
+```
+password
+```
 **E-mail**: user@iot.com  
 **Wachtwoord**: password
 
@@ -35,17 +43,3 @@ Verdere instructies: https://projects.raspberrypi.org/en/projects/getting-starte
   sudo apt-get install libqtgui4
   sudo apt-get install libqt4-test
   ```
-
-## Login details
-
-Email:
-
-```
-user@iot.com
-```
-
-Password:
-
-```
-password
-```
