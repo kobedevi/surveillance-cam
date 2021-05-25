@@ -10,6 +10,10 @@ Kobe Devillé
 Dante Weverbergh  
 Jonas Di Dier
 
+## App login
+**E-mail**: user@iot.com  
+**Wachtwoord**: password
+
 ## Hoe camera installeren
 Verdere instructies: https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2
  - Verbind camera met pi
