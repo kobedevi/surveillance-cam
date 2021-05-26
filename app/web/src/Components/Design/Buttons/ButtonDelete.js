@@ -1,14 +1,14 @@
 import './Button.scss';
-import { FaSave } from 'react-icons/fa';
+import { mdDelete } from 'react-icons/md';
 
-function ButtonSave() {
+function ButtonDelete() {
   return (
     <div>
       <button classname="buttonSave btnSmall">
-        <FaSave />
+        <mdDelete />
       </button>
     </div>
   );
 }
 
-export default ButtonSave;
+export default ButtonDelete;
