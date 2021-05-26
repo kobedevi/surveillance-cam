@@ -97,6 +97,7 @@ def handleNoMotionFrame():
             # Reset motion frames
             motionFrames = 0
             noMotionFrames = 0
+            timeOfMotion = None
     else: 
         motionFrames = 0
 
