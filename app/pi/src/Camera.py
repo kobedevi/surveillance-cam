@@ -10,8 +10,18 @@ import Motion
 
 camera = None
 
+# Set up camera
+def init():
+	global camera
+
+	camera = PiCamera()
+	camera.resolution = (640, 480)
+	camera.framerate = 25
+	camera.annotate_text_size = 15
+
 def start():
 	init()
+
 	# Allow the camera to adjust to lighting/white balance
 	sleep(2)
 	
@@ -31,22 +41,18 @@ def start():
 		rawCapture.truncate(0)
 
 def stop():
-	camera.close()
-
-# Set up camera
-def init():
 	global camera
-	camera = PiCamera()
-	camera.resolution = (640, 480)
-	camera.framerate = 25
-	camera.annotate_text_size = 15
+
+	Motion.clearCallbacks()
+	camera.close()
+	camera = None
 
 def addAnnotation():
 	# def addTimestamp():
 	global camera
 
 	# Show timestamp
-	while camera.recording == True:
+	while camera.recording:
 		camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
 		camera.wait_recording(0.3)
 	else :
