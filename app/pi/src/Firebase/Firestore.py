@@ -1,15 +1,8 @@
 from firebase_admin import firestore
 
+# CAMERA COLLECTION
+
 DOC_STALE_TIME = 300 # 5 minutes
-
-def getCollection(collectionName):
-    db = firestore.client()
-    return db.collection(collectionName)
-
-def getSettings():
-    settings = getCollection('app').document('settings').get()
-
-    return settings.to_dict();
 
 def createDocument(dt):
     '''Create a new Firebase document in the 'camera' collection
@@ -60,3 +53,60 @@ def addFileToDocument(filename, field, dt):
         'lastMotion': dt,
         field: firestore.ArrayUnion([filename])
     })
+
+# APP COLLECTION
+
+settings = None
+onSettingsChangeCallbacks = []
+onFieldChangeCallbacks = {}
+
+def getSettings():
+    settings = getCollection('app').document('settings').get()
+
+    return settings.to_dict();
+
+def listonToSettings():
+    def onSnapshot(docSnapshot, changes, readTime):
+        global settings
+
+        # Set settings on initial snapshot
+        if (not settings):
+            settings = docSnapshot
+            # Set onFieldChangeCallbacks to keys with empty array as value
+            return
+
+        # Compare values
+        # changedKeys = []
+        # for key, value in docSnapshot:
+        #     if (settings[key] !== value):
+        #         changedKeys.append(key)
+
+        # if (len(changedKey) == 0):
+        #     return
+
+        # Update settings
+        settings = docSnapshot
+
+        # Call listeners        
+        # for callback in onSettingsChangeCallbacks:
+        #     callback(settings)
+
+        # for key in changedKeys:
+        #     for callback in onFieldChangeCallbacks:
+        #         callback(settings[key])
+
+    docRef = getCollection('app').document('settings')
+    docRef.on_snapshot(onSnapshot)
+
+def onSettingsChange(callback):
+    onSettingsChangeCallbacks.append(callback)
+
+def onSettingsChange(field, callback):
+    onFieldChangeCallbacks[field].append(callback)
+
+
+# HELPERS
+
+def getCollection(collectionName):
+    db = firestore.client()
+    return db.collection(collectionName)

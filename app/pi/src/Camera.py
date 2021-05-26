@@ -41,8 +41,11 @@ def start():
 		rawCapture.truncate(0)
 
 def stop():
+	global camera
+
 	Motion.clearCallbacks()
 	camera.close()
+	camera = None
 
 def addAnnotation():
 	# def addTimestamp():
