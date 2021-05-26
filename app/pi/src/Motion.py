@@ -119,3 +119,10 @@ def onMotionEnd(callback):
     '''
 
     onMotionEndCallbacks.append(callback)
+
+def clearCallbacks():
+    global onMotionCallbacks
+    global onMotionEndCallbacks
+
+    onMotionCallbacks = []
+    onMotionEndCallbacks = []
