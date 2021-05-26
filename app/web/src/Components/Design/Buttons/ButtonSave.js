@@ -1,14 +1,14 @@
 import './Button.scss';
 import { FaSave } from 'react-icons/fa';
 
-function ButtonSave() {
+const ButtonSave = ({ children, onclic, type }) => {
   return (
     <div>
-      <button classname="buttonSave btnSmall">
+      <button classname="buttonSave btnSmall" onclick={onclick} type={type}>
         <FaSave />
       </button>
     </div>
   );
-}
+};
 
 export default ButtonSave;
