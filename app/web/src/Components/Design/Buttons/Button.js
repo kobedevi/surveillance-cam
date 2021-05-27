@@ -5,7 +5,7 @@ const STYLES = ['btnSave', 'btnDelete', 'btn--test'];
 
 const SIZES = ['btnSmall', 'btnLarge'];
 
-export const Button = ({
+const Button = ({
   children,
   //type,
   //onClick,
@@ -28,3 +28,5 @@ export const Button = ({
     </button>
   );
 };
+
+export default Button

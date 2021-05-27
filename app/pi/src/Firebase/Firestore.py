@@ -57,52 +57,45 @@ def addFileToDocument(filename, field, dt):
 # APP COLLECTION
 
 settings = None
-onSettingsChangeCallbacks = []
-onFieldChangeCallbacks = {}
+onSettingsChangeCallbacks = {
+    'running': [],
+    'registrationTokens': [],
+}
 
 def getSettings():
     settings = getCollection('app').document('settings').get()
 
     return settings.to_dict();
 
-def listonToSettings():
+def listenToSettings():
     def onSnapshot(docSnapshot, changes, readTime):
         global settings
 
+        settingsDoc = docSnapshot[0].to_dict()
+
         # Set settings on initial snapshot
         if (not settings):
-            settings = docSnapshot
-            # Set onFieldChangeCallbacks to keys with empty array as value
+            settings = settingsDoc
             return
-
-        # Compare values
-        # changedKeys = []
-        # for key, value in docSnapshot:
-        #     if (settings[key] !== value):
-        #         changedKeys.append(key)
-
-        # if (len(changedKey) == 0):
-        #     return
+        
+        # Find changed key
+        for key in settingsDoc:
+            if (settingsDoc[key] != settings[key]):
+                changedKey = key
+                break
 
         # Update settings
-        settings = docSnapshot
+        settings = settingsDoc
 
-        # Call listeners        
-        # for callback in onSettingsChangeCallbacks:
-        #     callback(settings)
-
-        # for key in changedKeys:
-        #     for callback in onFieldChangeCallbacks:
-        #         callback(settings[key])
+        # Execute callbacks with changed value
+        for callback in onSettingsChangeCallbacks[changedKey]:
+            callback(settings[key])
 
     settingsRef = getCollection('app').document('settings')
     settingsRef.on_snapshot(onSnapshot)
 
-def onSettingsChange(callback):
-    onSettingsChangeCallbacks.append(callback)
-
 def onSettingsChange(field, callback):
-    onFieldChangeCallbacks[field].append(callback)
+    onSettingsChangeCallbacks[field].append(callback)
 
 def removeRegistrationTokens(registrationTokens):
     settingsRef = getCollection('app').document('settings')

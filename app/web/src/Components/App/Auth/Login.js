@@ -40,12 +40,12 @@ const Login = ({setUser}) => {
             <button type="submit">Login</button>
           </div>
 
-          {error && <p>{error.message}</p>}
         </form>
+        {
+          error && <Alert color="danger">{error.message}</Alert>
+        }
       </div>
-      {
-        error && <Alert color="danger">{error.message}</Alert>
-      }
+      
       {/* 
       <div className="container">
         <div className="row justify-content-center align-items-center">

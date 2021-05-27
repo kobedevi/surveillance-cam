@@ -6,7 +6,6 @@ import storage from "../../../core/storage";
 import Login from "./Login";
 import firebase from 'firebase/app';
 import '../../../services/firebase';
-// import firebaseSettings from "../../../services/firebase";
 import Spinner from "../../Design/Spinner/Spinner";
 
 const AuthContext = createContext();
@@ -17,18 +16,20 @@ const AuthContainer = () => {
   
     useEffect(() => {
         firebase.auth().onAuthStateChanged((user) => {
-        setUser(user.email)
+        if(user) {
+            setUser(user.email)
+        }
         setPending(false)
       });
     }, []);
 
     const updateUser = (updatedUser) => {
-        storage.storeUser(updatedUser);
         setUser(updatedUser);
     }
 
     const logout = () => {
-        updateUser(null);
+        firebase.auth().signOut();
+        setUser(null)
     }
 
     if(pending) {
