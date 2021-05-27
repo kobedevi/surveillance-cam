@@ -33,7 +33,6 @@ const useRegistrationToken = () => {
             const settingsRef = db.collection('app').doc('settings');
             await settingsRef.get();
             settingsRef.update({
-              test: firebase.firestore.FieldValue.increment(1),
               registrationTokens:
                 firebase.firestore.FieldValue.arrayUnion(currentToken),
             });
