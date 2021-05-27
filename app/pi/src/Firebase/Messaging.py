@@ -18,19 +18,23 @@ def sendPushNotification(registrationTokens, title, imgUrl):
     # Response is a message ID string
     print('Successfully sent message:', response)
 
-    # Show failed tokens
-    if response.failure_count > 0:
-        responses = response.responses
-        failed_tokens = []
-        for idx, resp in enumerate(responses):
-            if not resp.success:
-                # The order of responses corresponds to the order of the registration tokens.
-                failed_tokens.append(registrationTokens[idx])
-        print('List of tokens that caused failures: {0}'.format(failed_tokens))
-        # TODO: Remove failed tokens from firestore
+    removeFailedTokens(response, registrationTokens)
 
 def notifyUsersWithPicture(imgPath):
     registrationTokens = Firestore.getSettings()
     imgUrl = Storage.getPublicURL(imgPath)
 
     sendPushNotification(registrationTokens, PUSH_TITLE, imgUrl)
+
+def removeFailedTokens(response, registrationTokens):
+    if response.failure_count > 0:
+        # Get failed tokens
+        responses = response.responses
+        failedTokens = []
+        for i, res in enumerate(responses):
+            if not res.success:
+                failedTokens.append(registrationTokens[i])
+
+        print('List of tokens that caused failures: {0}'.format(failedTokens))
+        
+        Firestore.removeRegistrationTokens(failedTokens)
