@@ -27,6 +27,8 @@ def uploadFile(source, destination):
     blob.upload_from_filename(source)
     blob.make_public()
     print("File {} uploaded to {}.".format(source, destination))
+    #Delete local file
+    os.remove(source)
 
     return destination
 
@@ -34,5 +36,4 @@ def getPublicURL(path):
     # Get blob
     bucket = getBucket()
     blob = bucket.blob(path)
-
     return blob.public_url

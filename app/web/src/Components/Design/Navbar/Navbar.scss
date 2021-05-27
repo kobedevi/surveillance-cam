@@ -42,28 +42,11 @@ body,
 
 /* Change the color of links on hover */
 .navbar a:hover {
-  background-color: rgb(77, 170, 243);
-  color: white;
+  color: rgb(77, 170, 243);
 }
 
 /* Add a color to the active/current link */
 .navbar a.active {
   background-color: rgb(77, 170, 243);
   color: white;
-}
-
-.settings {
-  overflow: hidden;
-  position: fixed;
-  top: 2%;
-  left: 90%;
-  width: 100%;
-  a {
-    color: white;
-    font-size: 35px;
-
-    :hover {
-      color: rgb(77, 170, 243);
-    }
-  }
 }

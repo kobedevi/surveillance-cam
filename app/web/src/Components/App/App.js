@@ -1,21 +1,20 @@
-import firebase from 'firebase/app';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import useRegistrationToken from '../../hooks/useRegistrationToken';
+import LogoutButton from '../Design/Buttons/LogoutButton';
 import Navbar from '../Design/Navbar/Navbar';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient();
 
 const App = () => {
-  const { token, error } = useRegistrationToken();
+  useRegistrationToken();
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <LogoutButton />
       <Navbar />
-
-      <code>
-        <pre>{JSON.stringify(firebase.apps[0].options, null, 2)}</pre>
-      </code>
-
-      {token && <p>{token}</p>}
-      {error && <p>{error?.message ?? error}</p>}
-    </>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 };
 

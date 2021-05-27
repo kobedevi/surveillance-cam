@@ -8,7 +8,6 @@ def sendPushNotification(registrationTokens, title, imgUrl):
     # Define message payload
     message = messaging.MulticastMessage(
         notification = messaging.Notification(title = title, image = imgUrl),
-        webpush = messaging.WebpushConfig(headers = { 'image': imgUrl }),
         tokens = registrationTokens,
     )
 
@@ -21,10 +20,10 @@ def sendPushNotification(registrationTokens, title, imgUrl):
     removeFailedTokens(response, registrationTokens)
 
 def notifyUsersWithPicture(imgPath):
-    registrationTokens = Firestore.getSettings()
+    settings = Firestore.getSettings()
     imgUrl = Storage.getPublicURL(imgPath)
 
-    sendPushNotification(registrationTokens, PUSH_TITLE, imgUrl)
+    sendPushNotification(settings['registrationTokens'], PUSH_TITLE, imgUrl)
 
 def removeFailedTokens(response, registrationTokens):
     if response.failure_count > 0:

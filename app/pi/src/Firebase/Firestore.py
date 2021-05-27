@@ -99,7 +99,7 @@ def onSettingsChange(field, callback):
 
 def removeRegistrationTokens(registrationTokens):
     settingsRef = getCollection('app').document('settings')
-    settingsRef.update({'registrationTokens': firestore.ArrayRemove([registrationTokens])})
+    settingsRef.update({'registrationTokens': firestore.ArrayRemove(registrationTokens)})
 
 # HELPERS
 
