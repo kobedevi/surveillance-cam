@@ -12,6 +12,11 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
+<<<<<<< HEAD
+    "react-router-dom": "^5.2.0",
+=======
+    "react-query": "^3.16.0",
+>>>>>>> 15378d211e93c3927ce6858c8ca8e1d77f5dd51e
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1"
   },
