@@ -34,5 +34,5 @@ def getPublicURL(path):
     # Get blob
     bucket = getBucket()
     blob = bucket.blob(path)
-
+    print(blob.public_url)
     return blob.public_url
