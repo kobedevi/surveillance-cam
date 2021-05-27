@@ -19,12 +19,6 @@ def main():
     Camera.start()
     # Camera.stop()
 
-    # Firestore.onSettingsChange('running', changeCameraState)
-    
-    # settings = Firestore.getSettings()
-    # Messaging.sendPushNotification(settings['registrationTokens'], 'Kobe test', 'https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg')
-    # Messaging.notifyUsersWithPicture('photos/20210525T122213.jpg')
-
 try:
     main()
 except (KeyboardInterrupt, SystemExit):

@@ -6,7 +6,6 @@ PUSH_TITLE = 'Motion detected!'
 
 def sendPushNotification(registrationTokens, title, imgUrl):
     # Define message payload
-    print('allo')
     message = messaging.MulticastMessage(
         notification = messaging.Notification(title = title, image = imgUrl),
         tokens = registrationTokens,
