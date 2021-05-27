@@ -7,7 +7,8 @@ import { useEffect, useState } from 'react';
 const useRegistrationToken = () => {
   const [token, setToken] = useState();
   const [error, setError] = useState();
-  Notification.requestPermission();
+
+  // Notification.requestPermission();
 
   useEffect(() => {
     const getToken = async () => {
@@ -30,7 +31,9 @@ const useRegistrationToken = () => {
             // Send token to firestore
             const db = firebase.firestore();
             const settingsRef = db.collection('app').doc('settings');
+            await settingsRef.get();
             settingsRef.update({
+              test: firebase.firestore.FieldValue.increment(1),
               registrationTokens:
                 firebase.firestore.FieldValue.arrayUnion(currentToken),
             });
