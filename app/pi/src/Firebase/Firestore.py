@@ -95,8 +95,8 @@ def listonToSettings():
         #     for callback in onFieldChangeCallbacks:
         #         callback(settings[key])
 
-    docRef = getCollection('app').document('settings')
-    docRef.on_snapshot(onSnapshot)
+    settingsRef = getCollection('app').document('settings')
+    settingsRef.on_snapshot(onSnapshot)
 
 def onSettingsChange(callback):
     onSettingsChangeCallbacks.append(callback)
@@ -104,6 +104,9 @@ def onSettingsChange(callback):
 def onSettingsChange(field, callback):
     onFieldChangeCallbacks[field].append(callback)
 
+def removeRegistrationTokens(registrationTokens):
+    settingsRef = getCollection('app').document('settings')
+    settingsRef.update({'registrationTokens': firestore.ArrayRemove(registrationTokens)})
 
 # HELPERS
 

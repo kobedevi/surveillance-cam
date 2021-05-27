@@ -13,7 +13,7 @@ const Navbar = () => {
       </div>
 
       <div className="navbar">
-        <a href="/saved" class="">
+        <a href="/saved" className="">
           <FaSave />
         </a>
         <a href="/home" className="active">

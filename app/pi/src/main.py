@@ -14,15 +14,7 @@ import sys
 
 def main():
     Firebase.init()
-    
-    # Module tests:
     Camera.start()
-    # Camera.stop()
-
-    # Firestore.onSettingsChange('running', changeCameraState)
-    
-    # settings = Firestore.getSettings()
-    # Messaging.sendPush('Title', 'Message', settings['registrationTokens'])
 
 try:
     main()
