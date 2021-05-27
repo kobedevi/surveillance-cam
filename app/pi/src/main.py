@@ -14,15 +14,12 @@ import sys
 
 def main():
     Firebase.init()
-    
-    # Module tests:
     Camera.start()
-    # Camera.stop()
 
 try:
     main()
 except (KeyboardInterrupt, SystemExit):
     print('Exiting program')
 finally:
-    # Camera.stop()
+    Camera.stop()
     sys.exit(0)
