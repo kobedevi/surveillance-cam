@@ -5,6 +5,7 @@ from time import sleep
 import subprocess
 import os
 from Firebase import Firestore
+from Firebase import Messaging
 from Firebase import Storage
 import Motion
 
@@ -66,8 +67,11 @@ def takePicture(time):
 	camera.capture(dirname + filename)
 
 	# Upload photo
-	Storage.uploadFile('out/' + filename, 'photos/' + filename)
-	Firestore.addFileToDocument(filename, 'photos', time)
+	path = Storage.uploadFile('out/' + filename, 'photos/' + filename)
+	Firestore.addFileToDocument(path, 'photos', time)
+
+	# Notify user
+	Messaging.notifyUsersWithPicture(path)
 
 def startRecording(time):
 	dirname = os.path.join(os.path.dirname(__file__), 'out/')
