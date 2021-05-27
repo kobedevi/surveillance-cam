@@ -1,29 +1,20 @@
-import firebase from 'firebase/app';
-import { FaSignOutAlt } from 'react-icons/fa';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import useRegistrationToken from '../../hooks/useRegistrationToken';
 import LogoutButton from '../Design/Buttons/LogoutButton';
 import Navbar from '../Design/Navbar/Navbar';
-import { IoIosSettings } from 'react-icons/io';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient();
 
 const App = () => {
-  const { token, error } = useRegistrationToken();
-
-  const logOut = () => {
-    firebase.auth().signOut();
-  };
+  useRegistrationToken();
 
   return (
-    <>
-      <Navbar />
-
+    <QueryClientProvider client={queryClient}>
       <LogoutButton />
-
-      <code>
-        <pre>{JSON.stringify(firebase.apps[0].options, null, 2)}</pre>
-      </code>
-      {token && <p>{token}</p>}
-      {error && <p>{error?.message ?? error}</p>}
-    </>
+      <Navbar />
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 };
 
