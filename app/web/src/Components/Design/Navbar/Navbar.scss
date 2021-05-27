@@ -51,19 +51,3 @@ body,
   background-color: rgb(77, 170, 243);
   color: white;
 }
-
-.settings {
-  overflow: hidden;
-  position: fixed;
-  top: 2%;
-  left: 90%;
-  width: 100%;
-  a {
-    color: white;
-    font-size: 35px;
-
-    :hover {
-      color: rgb(77, 170, 243);
-    }
-  }
-}

@@ -6,12 +6,6 @@ import { IoIosSettings } from 'react-icons/io';
 const Navbar = () => {
   return (
     <>
-      <div className="settings">
-        <a href="/settings">
-          <IoIosSettings />
-        </a>
-      </div>
-
       <div className="navbar">
         <a href="/saved" className="">
           <FaSave />
