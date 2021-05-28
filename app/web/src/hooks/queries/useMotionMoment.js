@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 const getMotionMoment = async (id) => {
   const db = firebase.firestore();
@@ -13,6 +13,8 @@ const getMotionMoment = async (id) => {
 };
 
 const useMotionMoment = (id) => {
+  const queryClient = useQueryClient();
+
   return useQuery(
     ['motionMoments', id],
     () => {
@@ -20,6 +22,8 @@ const useMotionMoment = (id) => {
     },
     {
       staleTime: 5 * 1000,
+      initialData: () =>
+        queryClient.getQueryData('motionMoments')?.find((mm) => mm.id === id),
     }
   );
 };

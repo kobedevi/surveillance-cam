@@ -93,8 +93,8 @@ def stopRecording(time):
 	convert(filename)
 
 	# Upload video
-	Storage.uploadFile('out/' + filename + '.mp4', 'videos/' + filename + '.mp4')
-	Firestore.addFileToDocument(filename + '.mp4', 'videos', time)
+	path = Storage.uploadFile('out/' + filename + '.mp4', 'videos/' + filename + '.mp4')
+	Firestore.addFileToDocument(path, 'videos', time)
 
 def convert(filename) :
 	# Convert the h264 format to the mp4 format

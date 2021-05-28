@@ -20,14 +20,13 @@ const Settings = () => {
     <>
       <h1>Settings</h1>
 
-      <dl>
+      <ul>
         {Object.entries(settings).map(([key, value]) => (
-          <>
-            <dt>{key}</dt>
-            <dd>{value.toString()}</dd>
-          </>
+          <li key={key}>
+            {key}: {value.toString()}
+          </li>
         ))}
-      </dl>
+      </ul>
 
       <LogoutButton />
     </>

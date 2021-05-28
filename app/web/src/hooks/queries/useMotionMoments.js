@@ -5,7 +5,9 @@ const getMotionMoments = async () => {
   const db = firebase.firestore();
   const motionMoments = await db.collection('camera').get();
 
-  return motionMoments.docs.map((mm) => ({ id: mm.id, ...mm.data() }));
+  return motionMoments.docs
+    .map((mm) => ({ id: mm.id, ...mm.data() }))
+    .reverse();
 };
 
 const useMotionMoments = () => {
