@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './Login.scss';
 import Alert from '../../Design/Alert';
 
-const Login = ({setUser}) => {
+const Login = () => {
   const [error, setError] = useState();
 
   const handleSubmit = async (e) => {
@@ -14,8 +14,7 @@ const Login = ({setUser}) => {
     const password = formData.get('password');
 
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((res) => setUser(res.user.email))
+      await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
       setError(error);
     }
@@ -39,13 +38,10 @@ const Login = ({setUser}) => {
           <div className="btn">
             <button type="submit">Login</button>
           </div>
-
         </form>
-        {
-          error && <Alert color="danger">{error.message}</Alert>
-        }
+        {error && <Alert color="danger">{error.message}</Alert>}
       </div>
-      
+
       {/* 
       <div className="container">
         <div className="row justify-content-center align-items-center">

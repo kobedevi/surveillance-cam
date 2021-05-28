@@ -1,20 +1,15 @@
-.overlay {
-  height: 100%;
-  display: grid;
-  place-items: center;
-}
-
 .lds-dual-ring {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
+  margin: 0 auto;
+  padding: 3rem 0;
+  width: 4rem;
+  height: 4rem;
 }
 
 .lds-dual-ring:after {
   content: ' ';
   display: block;
-  width: 64px;
-  height: 64px;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   border: 6px solid rgb(255, 255, 255);
   border-color: #fff transparent #fff transparent;

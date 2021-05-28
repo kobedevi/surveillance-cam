@@ -1,11 +1,7 @@
-import './Spinner.css';
+import './Spinner.scss';
 
 const Spinner = () => {
-  return (
-    <div className="overlay">
-      <div className="lds-dual-ring"></div>
-    </div>
-  );
+  return <div className="lds-dual-ring"></div>;
 };
 
 export default Spinner;

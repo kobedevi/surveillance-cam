@@ -9,7 +9,7 @@ const getMotionMoments = async () => {
 };
 
 const useMotionMoments = () => {
-  return useQuery('motionMoments', getMotionMoments, { staleTime: 10 * 1000 });
+  return useQuery('motionMoments', getMotionMoments, { staleTime: 5 * 1000 });
 };
 
 export default useMotionMoments;

@@ -5,6 +5,10 @@ const getMotionMoment = async (id) => {
   const db = firebase.firestore();
   const motionMoment = await db.collection('camera').doc(id).get();
 
+  if (!motionMoment.exists) {
+    throw new Error('Invalid id');
+  }
+
   return { id: motionMoment.id, ...motionMoment.data() };
 };
 
@@ -15,7 +19,7 @@ const useMotionMoment = (id) => {
       return getMotionMoment(id);
     },
     {
-      staleTime: 10 * 1000,
+      staleTime: 5 * 1000,
     }
   );
 };

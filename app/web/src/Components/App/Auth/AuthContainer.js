@@ -1,65 +1,62 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import App from '../App';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Routes } from "../../../core/routing/index"
-import storage from "../../../core/storage";
-import Login from "./Login";
 import firebase from 'firebase/app';
 import '../../../services/firebase';
-import Spinner from "../../Design/Spinner/Spinner";
+import { Routes } from '../../../core/routing/index';
+import Spinner from '../../Design/Spinner/Spinner';
+import App from '../App';
+import Login from './Login';
 
 const AuthContext = createContext();
 
 const AuthContainer = () => {
-    const [user, setUser] = useState(null);
-    const [pending, setPending] = useState(true);
-  
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged((user) => {
-        if(user) {
-            setUser(user.email)
-        }
-        setPending(false)
-      });
-    }, []);
+  const [user, setUser] = useState(null);
+  const [pending, setPending] = useState(true);
 
-    const updateUser = (updatedUser) => {
-        setUser(updatedUser);
-    }
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user.email);
+      }
+      setPending(false);
+    });
+  }, []);
 
-    const logout = () => {
-        firebase.auth().signOut();
-        setUser(null)
-    }
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+  };
 
-    if(pending) {
-        return <Spinner />
-    }
+  const logout = () => {
+    firebase.auth().signOut();
+    setUser(null);
+  };
 
-    if(user) {
-        return (
-            <AuthContext.Provider value={{user, setUser: updateUser, logout}}>
-                <App/>
-            </AuthContext.Provider>
-        )
-    }
-    
+  if (pending) {
+    return <Spinner />;
+  }
+
+  if (user) {
     return (
-        <Switch>
-            <Route path={Routes.Login}>
-                <Login setUser={updateUser}/>
-            </Route>
-            <Redirect to={Routes.Login} />
-        </Switch>
-    )
-}
+      <AuthContext.Provider value={{ user, setUser: updateUser, logout }}>
+        <App />
+      </AuthContext.Provider>
+    );
+  }
+
+  return (
+    <Switch>
+      <Route path={Routes.Login}>
+        <Login setUser={updateUser} />
+      </Route>
+      <Redirect to={Routes.Login} />
+    </Switch>
+  );
+};
 
 const useAuth = () => {
-    return useContext(AuthContext);
-}
+  return useContext(AuthContext);
+};
 
-export {
-    useAuth,
-}
+export { useAuth };
 
 export default AuthContainer;
