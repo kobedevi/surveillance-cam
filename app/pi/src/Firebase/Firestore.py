@@ -1,4 +1,5 @@
 from firebase_admin import firestore
+import threading
 
 # CAMERA COLLECTION
 
@@ -15,7 +16,7 @@ def createDocument(dt):
     '''
 
     docName = dt.strftime('%Y%m%dT%H%M%S')
-    docRef = getCollection('camera').document(docName)
+    docRef = _getCollection('camera').document(docName)
     docRef.set({
         'firstMotion': dt,
         'lastMotion': dt,
@@ -36,7 +37,7 @@ def addFileToDocument(filename, field, dt):
     '''
 
     # Get most recent doc from firestore
-    query = getCollection('camera').order_by('firstMotion', direction=firestore.Query.DESCENDING).limit(1)
+    query = _getCollection('camera').order_by('firstMotion', direction=firestore.Query.DESCENDING).limit(1)
     docSnapshot = query.get()
     docRef = docSnapshot[0].reference if docSnapshot else createDocument(dt)
     doc = docRef.get().to_dict()
@@ -57,19 +58,30 @@ def addFileToDocument(filename, field, dt):
 # APP COLLECTION
 
 settings = None
+changedKeys = []
+settingsChanged = threading.Event()
 onSettingsChangeCallbacks = {
     'running': [],
     'registrationTokens': [],
 }
 
 def getSettings():
-    settings = getCollection('app').document('settings').get()
+    '''Get the settings document as a dict'''
+
+    settings = _getCollection('app').document('settings').get()
 
     return settings.to_dict();
 
 def listenToSettings():
+    '''Listen to changes on the settings document.
+    On snapshot:
+     - Update the global settings dict with the new document
+     - Store the changed keys in the global changedKeys list
+     - Signal changes with the global Event
+    '''
     def onSnapshot(docSnapshot, changes, readTime):
         global settings
+        global changedKeys
 
         settingsDoc = docSnapshot[0].to_dict()
 
@@ -78,31 +90,66 @@ def listenToSettings():
             settings = settingsDoc
             return
         
-        # Find changed key
+        # Find changed keys
         for key in settingsDoc:
             if (settingsDoc[key] != settings[key]):
-                changedKey = key
-                break
+                changedKeys.append(key)
 
-        # Update settings
+        # Update and signal changes
         settings = settingsDoc
+        settingsChanged.set()
 
-        # Execute callbacks with changed value
-        for callback in onSettingsChangeCallbacks[changedKey]:
-            callback(settings[key])
-
-    settingsRef = getCollection('app').document('settings')
+    settingsRef = _getCollection('app').document('settings')
     settingsRef.on_snapshot(onSnapshot)
 
+def waitForSettingsChange():
+    '''Wait for the settingsChanged event to set.
+    Then, execute the subscribed callbacks and clear the state.
+    '''
+
+    global changedKeys
+
+    # Wait for event
+    settingsChanged.wait()
+
+    # Execute callbacks
+    for key in changedKeys:
+        for callback in onSettingsChangeCallbacks[key]:
+            callback(settings[key])
+    
+    # Reset state
+    changedKeys = []
+    settingsChanged.clear()
+
 def onSettingsChange(field, callback):
+    '''Add a callback to execute when a field in the settings has changed.
+
+    Args:
+        field (string): One of the fields in the settings document.
+        callback (function): The function that will be called.
+            The value of the field will be passed as argument.
+    '''
+
     onSettingsChangeCallbacks[field].append(callback)
 
 def removeRegistrationTokens(registrationTokens):
-    settingsRef = getCollection('app').document('settings')
+    '''Remove registration tokens from the settings document.
+
+    Args:
+        registrationTokens (list): The tokens to remove. Must be a list.
+    '''
+
+    settingsRef = _getCollection('app').document('settings')
     settingsRef.update({'registrationTokens': firestore.ArrayRemove(registrationTokens)})
 
 # HELPERS
 
-def getCollection(collectionName):
+def _getCollection(collectionName):
+    '''Helper function to get a collection from the firestore.
+
+    Args:
+        collectionName (string): The name of the collection.
+    '''
+
     db = firestore.client()
     return db.collection(collectionName)
