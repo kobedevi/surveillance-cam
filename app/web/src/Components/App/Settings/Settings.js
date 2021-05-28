@@ -1,7 +1,6 @@
 import LogoutButton from '../Auth/LogoutButton';
 import useSettings from '../../../hooks/queries/useSettings';
-import Spinner from '../../Design/Spinner/Spinner';
-import Alert from '../../Design/Alert';
+import { Alert, Spinner, Title } from '../../Design';
 
 const Settings = () => {
   const { data: settings, ...query } = useSettings();
@@ -14,11 +13,11 @@ const Settings = () => {
     return <Alert color="danger">{query.error.message}</Alert>;
   }
 
-  console.log(settings);
-
   return (
     <>
-      <h1>Settings</h1>
+      <Title>Settings</Title>
+
+      <Alert>This is an example alert</Alert>
 
       <ul>
         {Object.entries(settings).map(([key, value]) => (

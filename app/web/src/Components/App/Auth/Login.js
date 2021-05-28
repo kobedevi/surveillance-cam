@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useState } from 'react';
+import { Alert } from '../../Design';
 import './Login.scss';
-import Alert from '../../Design/Alert';
 
 const Login = () => {
   const [error, setError] = useState();

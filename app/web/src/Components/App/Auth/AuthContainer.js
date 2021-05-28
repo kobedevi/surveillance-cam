@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import firebase from 'firebase/app';
 import '../../../services/firebase';
 import { Routes } from '../../../core/routing/index';
-import Spinner from '../../Design/Spinner/Spinner';
+import { Spinner } from '../../Design';
 import App from '../App';
 import Login from './Login';
 

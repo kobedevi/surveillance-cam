@@ -4,8 +4,7 @@ import { Routes } from '../../../core/routing';
 import formatDateString from '../../../core/utils/formatDateString';
 import formatTimestamp from '../../../core/utils/formatTimestamp';
 import useMotionMoment from '../../../hooks/queries/useMotionMoment';
-import Alert from '../../Design/Alert';
-import Spinner from '../../Design/Spinner/Spinner';
+import { Alert, Spinner, Title } from '../../Design';
 import Photo from '../../Shared/Photo';
 import Video from '../../Shared/Video';
 
@@ -25,7 +24,7 @@ const TimelineDetail = () => {
     <>
       <Link to={Routes.Timeline}>Back</Link>
 
-      <h1>{formatDateString(motionMoment.id)}</h1>
+      <Title>{formatDateString(motionMoment.id)}</Title>
 
       <dl>
         <dt>First motion</dt>

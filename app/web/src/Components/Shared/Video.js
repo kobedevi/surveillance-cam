@@ -8,7 +8,7 @@ const Video = ({ path }) => {
   }
 
   return (
-    <video width="640" height="480" controls>
+    <video width="640" controls>
       <source src={URL} type="video/mp4" />
     </video>
   );

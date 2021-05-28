@@ -1,11 +1,11 @@
-.lds-dual-ring {
+.spinner {
   margin: 0 auto;
   padding: 3rem 0;
   width: 4rem;
   height: 4rem;
 }
 
-.lds-dual-ring:after {
+.spinner:after {
   content: ' ';
   display: block;
   width: 4rem;
@@ -13,10 +13,10 @@
   border-radius: 50%;
   border: 6px solid rgb(255, 255, 255);
   border-color: #fff transparent #fff transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
+  animation: spinner 1.2s linear infinite;
 }
 
-@keyframes lds-dual-ring {
+@keyframes spinner {
   0% {
     transform: rotate(0deg);
   }

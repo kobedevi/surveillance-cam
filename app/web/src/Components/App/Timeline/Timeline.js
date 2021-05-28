@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 import { route, Routes } from '../../../core/routing';
 import formatDateString from '../../../core/utils/formatDateString';
 import useMotionMoments from '../../../hooks/queries/useMotionMoments';
-import Alert from '../../Design/Alert';
-import Spinner from '../../Design/Spinner/Spinner';
+import { Alert, Spinner, Title } from '../../Design';
 
 const Timeline = () => {
   const { data: motionMoments, ...query } = useMotionMoments();
@@ -18,7 +17,7 @@ const Timeline = () => {
 
   return (
     <>
-      <h1>Timeline</h1>
+      <Title>Timeline</Title>
 
       <ul>
         {motionMoments.map((mm) => (

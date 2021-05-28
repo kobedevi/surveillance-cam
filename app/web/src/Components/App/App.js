@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useRegistrationToken from '../../hooks/useRegistrationToken';
-import Navbar from '../Design/Navbar/Navbar';
+import Navbar from './Navbar/Navbar';
 import MainRouting from './MainRouting';
 
 const queryClient = new QueryClient();
