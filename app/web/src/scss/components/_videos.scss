@@ -9,7 +9,7 @@
     grid-template-areas:
       'time video lock'
       'time video download';
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     grid-template-rows: 1fr 1fr;
     place-items: center;
 
