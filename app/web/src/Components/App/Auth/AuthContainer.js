@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import firebase from 'firebase/app';
-import '../../../services/firebase';
 import { Routes } from '../../../core/routing/index';
 import { Spinner } from '../../Design';
 import App from '../App';

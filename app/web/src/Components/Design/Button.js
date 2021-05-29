@@ -1,22 +1,24 @@
 const COLORS = ['primary', 'secondary', 'muted'];
-const SIZES = ['sm', 'lg'];
 
 const Button = ({
   children,
   onClick,
+  icon = true,
   color = 'primary',
-  size = 'sm',
   type = 'button',
   className = '',
+  ...attrs
 }) => {
   const btnColor = COLORS.includes(color) ? color : COLORS[0];
-  const btnSize = SIZES.includes(color) ? size : SIZES[0];
 
   return (
     <button
-      className={`btn btn--${btnColor} btn--${btnSize} ${className}`}
+      className={`btn btn--${btnColor} btn--${
+        icon ? 'icon' : 'text'
+      } ${className}`}
       onClick={onClick}
       type={type}
+      {...attrs}
     >
       {children}
     </button>
