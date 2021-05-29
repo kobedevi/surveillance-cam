@@ -5,11 +5,12 @@ import threading
 
 DOC_STALE_TIME = 300 # 5 minutes
 
-def createDocument(dt):
+def createDocument(dt, fileName):
     '''Create a new Firebase document in the 'camera' collection
 
     Args:
         dt (datetime): The time of the first motion (datetime.datetime.now())
+        fileName (string): The name of the image in the Firebase Storage
     
     Returns:
         DocumentReference: A Firestore reference to the created document
@@ -20,26 +21,28 @@ def createDocument(dt):
     docRef.set({
         'firstMotion': dt,
         'lastMotion': dt,
-        'photos': [],
-        'videos': []
+        'preview': fileName
     })
 
     return docRef
 
-def addFileToDocument(filename, field, dt):
-    '''Update the correct Firestore document with a reference to the video file.
+def addFileToDocument(fileName, field, dt):
+    '''Update the correct Firestore document with a reference to the file inside a subcollection.
     Create a new document when the previous document has become stale.
 
     Args:
-        filename (string): The name of the video in the Firebase Storage
-        field ('photos'|'videos'): The name of the document field where the file will be added to
+        fileName (string): The name of the image or video in the Firebase Storage
+        field ('photo'|'video'): The name of the document field where the file will be added to
         dt (datetime): The time of the detected motion (datetime.datetime.now())
+
+    Notes:
+        This function assumes that the picture will always be stored before the corresponding video.
     '''
 
     # Get most recent doc from firestore
     query = _getCollection('camera').order_by('firstMotion', direction=firestore.Query.DESCENDING).limit(1)
     docSnapshot = query.get()
-    docRef = docSnapshot[0].reference if docSnapshot else createDocument(dt)
+    docRef = docSnapshot[0].reference if docSnapshot else createDocument(dt, fileName)
     doc = docRef.get().to_dict()
 
     # Compare time
@@ -47,13 +50,21 @@ def addFileToDocument(filename, field, dt):
     timeSinceLastMotion = dt.timestamp() - lastMotion.timestamp()
 
     if (timeSinceLastMotion > DOC_STALE_TIME):
-        docRef = createDocument(dt)
+        docRef = createDocument(dt, fileName)
     
     # Update document
     docRef.update({
-        'lastMotion': dt,
-        field: firestore.ArrayUnion([filename])
+        'lastMotion': dt
     })
+
+    # Add file to recordings subcollection
+    recName = dt.strftime('%Y%m%dT%H%M%S')
+    recRef = docRef.collection('recordings').document(recName)
+    recRef.set({
+        'timeOfMotion': dt,
+        field: fileName,
+        'lock': False,
+    }, merge=True)
 
 # APP COLLECTION
 
