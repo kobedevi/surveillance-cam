@@ -1,12 +1,12 @@
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+import { IoMdDownload, IoMdLock, IoMdUnlock } from 'react-icons/io';
 import { Routes } from '../../../core/routing';
 import formatDateString from '../../../core/utils/formatDateString';
 import formatTimestamp from '../../../core/utils/formatTimestamp';
 import useMotionMoment from '../../../hooks/queries/useMotionMoment';
-import { Alert, Spinner, Title } from '../../Design';
-import Photo from '../../Shared/Photo';
-import Video from '../../Shared/Video';
+import { Alert, Button, Spinner, Title } from '../../Design';
+import Video from './Video';
 
 const TimelineDetail = () => {
   const { id } = useParams();
@@ -33,13 +33,19 @@ const TimelineDetail = () => {
         <dd>{formatTimestamp(motionMoment.lastMotion)}</dd>
       </dl>
 
-      {motionMoment.photos.map((path) => (
-        <Photo key={path} path={path} />
-      ))}
-
-      {motionMoment.videos.map((path) => (
-        <Video key={path} path={path} />
-      ))}
+      <section className="videos">
+        {motionMoment.videos.map((path, i) => (
+          <article key={path}>
+            <Video videoPath={path} photoPath={motionMoment.photos[i]} />
+            <Button color="muted" className="lock">
+              <IoMdUnlock />
+            </Button>
+            <Button color="secondary" className="download">
+              <IoMdDownload />
+            </Button>
+          </article>
+        ))}
+      </section>
     </>
   );
 };

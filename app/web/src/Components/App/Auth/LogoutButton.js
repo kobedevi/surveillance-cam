@@ -1,5 +1,4 @@
 import { useAuth } from '../Auth/AuthContainer';
-import '../../Design/Buttons/Button.scss';
 
 const LogoutButton = () => {
   const { logout } = useAuth();
