@@ -1,10 +1,9 @@
 import LogoutButton from '../Auth/LogoutButton';
-import { useSettings } from '../../../hooks/queries/useSettings';
+import useSettings from '../../../hooks/queries/useSettings';
 import { Alert, Spinner, Title } from '../../Design';
 
 const Settings = () => {
   const { data: settings, ...query } = useSettings();
-  console.log(settings);
 
   if (query.isLoading) {
     return <Spinner />;

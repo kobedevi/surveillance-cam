@@ -1,11 +1,15 @@
-import { useState } from 'react';
-import { useSettings, postSettings } from '../../../hooks/queries/useSettings';
-import { Alert, Spinner, Title } from '../../Design';
-import PowerButton from '../PowerButton';
+import { IoMdPower } from 'react-icons/io';
+import useSettings from '../../../hooks/queries/useSettings';
+import useUpdateSettings from '../../../hooks/mutations/useUpdateSettings';
+import { Alert, Button, Spinner, Title } from '../../Design';
 
 const Home = () => {
-
   const { data: settings, ...query } = useSettings();
+  const mutation = useUpdateSettings();
+
+  const togglePower = () => {
+    mutation.mutate({ running: !settings.running });
+  };
 
   if (query.isLoading) {
     return <Spinner />;
@@ -16,10 +20,16 @@ const Home = () => {
   }
 
   return (
-      <div className="center-container">
-        <Title>Home</Title>
-        <PowerButton value={settings.running}/>
-      </div>
+    <section className="power-button">
+      <Button
+        value={settings.running}
+        onClick={togglePower}
+        className={settings.running ? 'active' : false}
+      >
+        <IoMdPower />
+      </Button>
+      <p>{settings.running ? 'On' : 'Off'}</p>
+    </section>
   );
 };
 
