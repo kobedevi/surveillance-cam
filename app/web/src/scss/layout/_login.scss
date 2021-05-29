@@ -1,9 +1,9 @@
 .login {
   place-self: center;
-  background-color: $background-muted;
+  width: 80%;
+  max-width: 32rem;
   border-radius: 1rem;
-  min-width: 25%;
-  max-width: 40rem;
+  background-color: $background-muted;
   box-shadow: 5px 5px 24px #0005;
 
   h1 {
@@ -15,7 +15,7 @@
   }
 
   form {
-    padding: 0 2.5rem;
+    padding: 0 1.5rem;
 
     label,
     input {
@@ -44,6 +44,14 @@
 
     button {
       margin-bottom: 1.5rem;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .login {
+    form {
+      padding: 0 2.5rem;
     }
   }
 }
