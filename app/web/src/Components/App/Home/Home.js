@@ -1,7 +1,7 @@
 import { IoMdPower } from 'react-icons/io';
 import useSettings from '../../../hooks/queries/useSettings';
 import useUpdateSettings from '../../../hooks/mutations/useUpdateSettings';
-import { Alert, Button, Spinner, Title } from '../../Design';
+import { Alert, Button, Spinner } from '../../Design';
 
 const Home = () => {
   const { data: settings, ...query } = useSettings();
@@ -25,6 +25,7 @@ const Home = () => {
         value={settings.running}
         onClick={togglePower}
         className={settings.running ? 'active' : false}
+        disabled={mutation.isLoading}
       >
         <IoMdPower />
       </Button>
