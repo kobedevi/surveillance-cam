@@ -7,10 +7,16 @@ import formatTimestamp from '../../../core/utils/formatTimestamp';
 import useMotionMoment from '../../../hooks/queries/useMotionMoment';
 import { Alert, Button, Spinner, Title } from '../../Design';
 import Video from './Video';
+import useUpdateRecording from '../../../hooks/mutations/useUpdateRecording';
 
 const TimelineDetail = () => {
   const { id } = useParams();
   const { data: motionMoment, ...query } = useMotionMoment(id);
+  const mutation = useUpdateRecording(id);
+
+  const toggleLock = (recording) => {
+    mutation.mutate({ id: recording.id, changes: { lock: !recording.lock } });
+  };
 
   if (query.isLoading) {
     return <Spinner />;
@@ -33,14 +39,26 @@ const TimelineDetail = () => {
         <dd>{formatTimestamp(motionMoment.lastMotion)}</dd>
       </dl>
 
+      <br />
+
       <section className="videos">
-        {motionMoment.videos.map((path, i) => (
-          <article key={path}>
-            <Video videoPath={path} photoPath={motionMoment.photos[i]} />
-            <Button color="muted" className="lock">
-              <IoMdUnlock />
+        {motionMoment.recordings.map((recording) => (
+          <article key={recording.id}>
+            <p>{formatTimestamp(recording.timeOfMotion)}</p>
+            <Video videoPath={recording.video} photoPath={recording.photo} />
+            <Button
+              color={recording.lock ? 'primary' : 'muted'}
+              className="lock"
+              onClick={() => toggleLock(recording)}
+              disabled={mutation.isLoading}
+            >
+              {recording.lock ? <IoMdLock /> : <IoMdUnlock />}
             </Button>
-            <Button color="secondary" className="download">
+            <Button
+              color="secondary"
+              className="download"
+              onClick={() => console.log('Download not implemented')}
+            >
               <IoMdDownload />
             </Button>
           </article>

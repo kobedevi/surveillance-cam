@@ -9,7 +9,17 @@ const getMotionMoment = async (id) => {
     throw new Error('Invalid id');
   }
 
-  return { id: motionMoment.id, ...motionMoment.data() };
+  const recordings = await db
+    .collection('camera')
+    .doc(id)
+    .collection('recordings')
+    .get();
+
+  return {
+    id: motionMoment.id,
+    ...motionMoment.data(),
+    recordings: recordings.docs.map((r) => ({ id: r.id, ...r.data() })),
+  };
 };
 
 const useMotionMoment = (id) => {

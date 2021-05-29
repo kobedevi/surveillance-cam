@@ -7,6 +7,7 @@ const Button = ({
   color = 'primary',
   type = 'button',
   className = '',
+  ...attrs
 }) => {
   const btnColor = COLORS.includes(color) ? color : COLORS[0];
 
@@ -17,6 +18,7 @@ const Button = ({
       } ${className}`}
       onClick={onClick}
       type={type}
+      {...attrs}
     >
       {children}
     </button>
