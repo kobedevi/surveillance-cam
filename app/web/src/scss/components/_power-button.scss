@@ -13,6 +13,7 @@
     box-shadow: 0 0 31px 5px rgba(0, 0, 0, 0.35);
     background-color: $background-muted;
     font-size: 7.5rem;
+    transition: background-color .1s;
 
     &.active {
       background-color: $secondary-color;
