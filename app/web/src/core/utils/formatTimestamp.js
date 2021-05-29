@@ -4,4 +4,12 @@ const formatTimestamp = (timestamp) => {
   ).toLocaleString();
 };
 
-export default formatTimestamp;
+const getTime = (timestamp) => {
+
+  return new Date(formatTimestamp(timestamp)).toLocaleTimeString('nl-BE');
+};
+
+export {
+  formatTimestamp,
+  getTime
+};

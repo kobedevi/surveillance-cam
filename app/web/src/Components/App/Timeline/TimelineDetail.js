@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { IoMdDownload, IoMdLock, IoMdUnlock } from 'react-icons/io';
 import { Routes } from '../../../core/routing';
 import formatDateString from '../../../core/utils/formatDateString';
-import formatTimestamp from '../../../core/utils/formatTimestamp';
+import {formatTimestamp, getTime} from '../../../core/utils/formatTimestamp';
 import useMotionMoment from '../../../hooks/queries/useMotionMoment';
 import { Alert, Button, Spinner, Title } from '../../Design';
 import Video from './Video';
@@ -44,7 +44,8 @@ const TimelineDetail = () => {
       <section className="videos">
         {motionMoment.recordings.map((recording) => (
           <article key={recording.id}>
-            <p>{formatTimestamp(recording.timeOfMotion)}</p>
+            <p>{getTime(recording.timeOfMotion)}</p>
+            <div className="timeline"></div>
             <Video videoPath={recording.video} photoPath={recording.photo} />
             <Button
               color={recording.lock ? 'primary' : 'muted'}

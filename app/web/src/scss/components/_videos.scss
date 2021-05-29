@@ -5,17 +5,43 @@
 
   article {
     display: grid;
-    column-gap: 1rem;
+    column-gap: .6rem;
     grid-template-areas:
-      'time video lock'
-      'time video download';
-    grid-template-columns: auto 1fr auto;
+      'time timeline video lock'
+      'time timeline video download';
+    grid-template-columns: auto 16px 1fr auto;
     grid-template-rows: 1fr 1fr;
     place-items: center;
 
+    .timeline{
+      align-self: start;
+      grid-area: timeline;
+      height: calc(100% + 40px);
+      width: 16px;
+      border-radius: 8px;
+      background-color: $background-muted;
+      position: relative;
+      &:after {
+        content: ' ';
+        position:absolute;
+        top: 0;
+        left: 0;
+        background: white;
+        width: 16px;
+        height: 16px;
+        border-radius: 8px;
+      }
+    }
+
+    &:last-of-type .timeline {
+      height: 100%;
+    }
+
     p {
-      grid-area: time;
+      // grid-area: time;
+      align-self: start;
       column-span: 1 / -1;
+      text-align: right;
     }
 
     video {
