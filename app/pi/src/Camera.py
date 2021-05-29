@@ -68,7 +68,7 @@ def takePicture(time):
 
 	# Upload photo
 	path = Storage.uploadFile('out/' + filename, 'photos/' + filename)
-	Firestore.addFileToDocument(path, 'photos', time)
+	Firestore.addFileToDocument(path, 'photo', time)
 
 	# Notify user
 	Messaging.notifyUsersWithPicture(path)
@@ -94,7 +94,7 @@ def stopRecording(time):
 
 	# Upload video
 	path = Storage.uploadFile('out/' + filename + '.mp4', 'videos/' + filename + '.mp4')
-	Firestore.addFileToDocument(path, 'videos', time)
+	Firestore.addFileToDocument(path, 'video', time)
 
 def convert(filename) :
 	# Convert the h264 format to the mp4 format
