@@ -1,0 +1,55 @@
+.btn {
+  display: grid;
+  place-items: center;
+
+  &--sm {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    font-size: 2rem;
+  }
+
+  &--lg {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 2.5rem;
+    font-size: 3rem;
+  }
+
+  &--primary {
+    color: $text-color;
+    background-color: $primary-color;
+  }
+
+  &--secondary {
+    color: $text-color;
+    background-color: $secondary-color;
+  }
+
+  &--muted {
+    color: lighten($background-muted, 10);
+    background-color: transparent;
+  }
+
+  &:hover {
+    filter: brightness(1.25);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .btn {
+    &--sm {
+      width: 5rem;
+      height: 5rem;
+      border-radius: 2.5rem;
+      font-size: 3rem;
+    }
+
+    &--lg {
+      width: 8rem;
+      height: 8rem;
+      border-radius: 4rem;
+      font-size: 4rem;
+    }
+  }
+}

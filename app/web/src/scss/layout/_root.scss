@@ -1,0 +1,40 @@
+#root {
+  margin: 0 auto;
+  max-width: 80rem;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+
+  main {
+    padding: 1.5rem;
+    max-width: 100vw;
+    overflow-x: hidden;
+    word-wrap: break-word;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.3rem;
+    opacity: 0.2;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 0.15rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0.25rem;
+    background: $background-muted;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #root {
+    ::-webkit-scrollbar {
+      width: 0.5rem;
+    }
+
+    ::-webkit-scrollbar-track {
+      border-radius: 0.25rem;
+    }
+  }
+}

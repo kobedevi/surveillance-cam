@@ -1,0 +1,30 @@
+.navbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: $background-muted;
+  border-radius: 1rem 1rem 0 0;
+
+  a {
+    padding: 0.75rem 0;
+    color: $text-color;
+    text-align: center;
+    font-size: 2rem;
+
+    &:first-of-type {
+      border-radius: 1rem 0 0 0;
+    }
+
+    &:last-of-type {
+      border-radius: 0 1rem 0 0;
+    }
+
+    &:hover {
+      color: $primary-color;
+    }
+
+    &.active {
+      color: $text-color;
+      background-color: $primary-color;
+    }
+  }
+}
