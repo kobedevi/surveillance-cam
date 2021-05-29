@@ -7,8 +7,18 @@ const getSettings = async () => {
   return settings.data();
 };
 
+const postSettings = async (value) => {
+  const db = firebase.firestore();
+  await db.collection('app').doc('settings').set({
+    running: value
+  }, { merge: true });
+};
+
 const useSettings = () => {
   return useQuery('settings', getSettings, { staleTime: 5 * 1000 });
 };
 
-export default useSettings;
+export {
+  useSettings,
+  postSettings,
+};
