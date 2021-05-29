@@ -25,12 +25,12 @@ def createDocument(dt):
 
     return docRef
 
-def addFileToDocument(filename, field, dt):
+def addFileToDocument(fileName, field, dt):
     '''Update the correct Firestore document with a reference to the video file.
     Create a new document when the previous document has become stale.
 
     Args:
-        filename (string): The name of the video in the Firebase Storage
+        fileName (string): The name of the video in the Firebase Storage
         field ('photos'|'videos'): The name of the document field where the file will be added to
         dt (datetime): The time of the detected motion (datetime.datetime.now())
     '''
@@ -50,9 +50,16 @@ def addFileToDocument(filename, field, dt):
     
     # Update document
     docRef.update({
-        'lastMotion': dt,
-        field: firestore.ArrayUnion([filename])
+        'lastMotion': dt
     })
+
+    # Add file to recordings subcollection
+    recName = dt.strftime('%Y%m%dT%H%M%S')
+    recRef = docRef.collection('recordings').doc(recName)
+    recRef.set({
+        'timeOfMotion': dt,
+        field: fileName
+    }, {'merge': True})
 
 # APP COLLECTION
 
