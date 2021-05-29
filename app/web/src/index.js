@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import './services/firebase';
+import './core/services/firebase';
 import AuthContainer from './Components/App/Auth/AuthContainer';
 import './scss/main.scss';
 

@@ -2,18 +2,17 @@
   display: grid;
   place-items: center;
 
-  &--sm {
+  &--text {
+    padding: 0.5rem 1.5rem;
+    border-radius: 1.5rem;
+    font-size: 1.25rem;
+  }
+
+  &--icon {
     width: 3rem;
     height: 3rem;
     border-radius: 1.5rem;
     font-size: 2rem;
-  }
-
-  &--lg {
-    width: 5rem;
-    height: 5rem;
-    border-radius: 2.5rem;
-    font-size: 3rem;
   }
 
   &--primary {
@@ -38,18 +37,11 @@
 
 @media screen and (min-width: 768px) {
   .btn {
-    &--sm {
+    &--icon {
       width: 5rem;
       height: 5rem;
       border-radius: 2.5rem;
       font-size: 3rem;
-    }
-
-    &--lg {
-      width: 8rem;
-      height: 8rem;
-      border-radius: 4rem;
-      font-size: 4rem;
     }
   }
 }
