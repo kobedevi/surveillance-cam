@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import useMotionMoments from '../../../core/hooks/queries/useMotionMoments';
 import { route, Routes } from '../../../core/routing';
-import formatDateString from '../../../core/utils/formatDateString';
+import formatDate from '../../../core/utils/formatDate';
 import { Alert, Spinner, Title } from '../../Design';
 import Photo from './Photo';
 
@@ -25,7 +25,7 @@ const Timeline = () => {
           <li key={mm.id}>
             <Photo path={mm.preview} />
             <Link to={route(Routes.TimelineDetail, { id: mm.id })}>
-              {formatDateString(mm.id)}
+              {formatDate(mm.id, 'D MMM - H:mm')}
             </Link>
           </li>
         ))}

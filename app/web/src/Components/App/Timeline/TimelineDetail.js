@@ -4,8 +4,7 @@ import { IoMdDownload, IoMdLock, IoMdUnlock } from 'react-icons/io';
 import useMotionMoment from '../../../core/hooks/queries/useMotionMoment';
 import useUpdateRecording from '../../../core/hooks/mutations/useUpdateRecording';
 import { Routes } from '../../../core/routing';
-import formatDateString from '../../../core/utils/formatDateString';
-import { formatTimestamp, getTime } from '../../../core/utils/formatTimestamp';
+import formatDate from '../../../core/utils/formatDate';
 import { Alert, Button, Spinner, Title } from '../../Design';
 import Video from './Video';
 
@@ -28,23 +27,33 @@ const TimelineDetail = () => {
 
   return (
     <>
-      <Link to={Routes.Timeline}>Back</Link>
+      <Link to={Routes.Timeline} className="return">
+        Back
+      </Link>
 
-      <Title>{formatDateString(motionMoment.id)}</Title>
+      <Title>{formatDate(motionMoment.id, 'D MMM - H:mm')}</Title>
 
-      <dl>
-        <dt>First motion</dt>
-        <dd>{formatTimestamp(motionMoment.firstMotion)}</dd>
-        <dt>Last motion</dt>
-        <dd>{formatTimestamp(motionMoment.lastMotion)}</dd>
-      </dl>
-
-      <br />
+      <p className="motion-time">
+        {motionMoment.firstMotion.seconds ===
+        motionMoment.lastMotion.seconds ? (
+          <em>
+            Motion detected at {formatDate(motionMoment.firstMotion, 'H:mm:ss')}
+            .
+          </em>
+        ) : (
+          <em>
+            First motion was detected at{' '}
+            {formatDate(motionMoment.firstMotion, 'H:mm:ss')}.<br />
+            Last motion occured at{' '}
+            {formatDate(motionMoment.lastMotion, 'H:mm:ss')}.
+          </em>
+        )}
+      </p>
 
       <section className="videos">
         {motionMoment.recordings.map((recording) => (
           <article key={recording.id}>
-            <p>{getTime(recording.timeOfMotion)}</p>
+            <p>{formatDate(recording.timeOfMotion, 'H:mm')}</p>
             <div className="timeline"></div>
             <Video videoPath={recording.video} photoPath={recording.photo} />
             <Button
