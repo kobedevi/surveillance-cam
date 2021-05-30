@@ -21,6 +21,7 @@ const Home = () => {
 
   return (
     <section className="power-button">
+      <p>Camera:</p>
       <Button
         value={settings.running}
         onClick={togglePower}

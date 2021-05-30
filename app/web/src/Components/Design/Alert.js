@@ -1,4 +1,4 @@
-const Alert = ({ children, color }) => {
+const Alert = ({ children, color="" }) => {
   return (
     <div className={`alert ${color}`} role="alert">
       {children}
