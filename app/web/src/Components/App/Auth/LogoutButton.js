@@ -1,12 +1,15 @@
-import { useAuth } from '../Auth/AuthContainer';
+import firebase from 'firebase/app';
+import { Button } from '../../Design';
 
 const LogoutButton = () => {
-  const { logout } = useAuth();
+  const logout = () => {
+    firebase.auth().signOut();
+  };
 
   return (
-    <button className="LogoutButton" onClick={logout}>
+    <Button onClick={logout} icon={false}>
       Uitloggen
-    </button>
+    </Button>
   );
 };
 
