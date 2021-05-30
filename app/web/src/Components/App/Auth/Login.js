@@ -24,7 +24,7 @@ const Login = () => {
       <section className="login">
         <h1>Inloggen</h1>
         <form onSubmit={handleSubmit}>
-          {error && <Alert>{error.message}</Alert>}
+          {error && <Alert color="danger">{error.message}</Alert>}
           <label htmlFor="email">Email</label>
           <input type="email" name="email" />
           <label htmlFor="password">Password</label>
