@@ -1,0 +1,49 @@
+.timeline-group {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  justify-items: center;
+
+  article {
+    border-radius: 0.5rem;
+    background-color: $background-muted;
+
+    img {
+      border-radius: 0.5rem;
+      aspect-ratio: 4 / 3;
+    }
+
+    p {
+      margin: 0.5rem;
+    }
+
+    a {
+      display: inline-block;
+      margin: 0.5rem;
+      margin-top: 0;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .timeline-group {
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+
+    article {
+      p {
+        margin: 1rem;
+      }
+
+      a {
+        margin: 1rem;
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .timeline-group {
+    grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+  }
+}
