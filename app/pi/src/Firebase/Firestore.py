@@ -140,6 +140,30 @@ def removeRegistrationTokens(registrationTokens):
     settingsRef = _getCollection('app').document('settings')
     settingsRef.update({'registrationTokens': firestore.ArrayRemove(registrationTokens)})
 
+# CRON
+def removeOldFiles(dt):
+    print('here')
+    oldDocs = _getCollection('camera').where('lastMotion', '<', dt).get()
+    print(oldDocs)
+
+    # Test
+    db = firestore.client()
+    db.collection('cron-test').doc('cron-output').set({
+        'field': True
+    })
+
+    for doc in oldDocs:
+        # print(doc)
+        # print(doc.reference)
+        print(doc.to_dict())
+
+        # TODO:
+        # Get all recordings
+        # For each recording in recordings
+        #   Remove the picture and video
+        #   Remove the recording
+        # Remove doc
+
 # HELPERS
 
 def _getCollection(collectionName):
