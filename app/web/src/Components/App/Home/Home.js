@@ -1,6 +1,6 @@
 import { IoMdPower } from 'react-icons/io';
-import useSettings from '../../../hooks/queries/useSettings';
-import useUpdateSettings from '../../../hooks/mutations/useUpdateSettings';
+import useSettings from '../../../core/hooks/queries/useSettings';
+import useUpdateSettings from '../../../core/hooks/mutations/useUpdateSettings';
 import { Alert, Button, Spinner } from '../../Design';
 
 const Home = () => {

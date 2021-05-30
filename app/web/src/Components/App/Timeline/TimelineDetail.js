@@ -1,13 +1,13 @@
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { IoMdDownload, IoMdLock, IoMdUnlock } from 'react-icons/io';
+import useMotionMoment from '../../../core/hooks/queries/useMotionMoment';
+import useUpdateRecording from '../../../core/hooks/mutations/useUpdateRecording';
 import { Routes } from '../../../core/routing';
 import formatDateString from '../../../core/utils/formatDateString';
-import {formatTimestamp, getTime} from '../../../core/utils/formatTimestamp';
-import useMotionMoment from '../../../hooks/queries/useMotionMoment';
+import { formatTimestamp, getTime } from '../../../core/utils/formatTimestamp';
 import { Alert, Button, Spinner, Title } from '../../Design';
 import Video from './Video';
-import useUpdateRecording from '../../../hooks/mutations/useUpdateRecording';
 
 const TimelineDetail = () => {
   const { id } = useParams();

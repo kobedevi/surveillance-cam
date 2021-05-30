@@ -1,4 +1,4 @@
-import useStorageURL from '../../../hooks/queries/useStorageURL';
+import useStorageURL from '../../../core/hooks/queries/useStorageURL';
 
 const Photo = ({ path }) => {
   const { data: URL, ...query } = useStorageURL(path);

@@ -1,5 +1,5 @@
 import LogoutButton from '../Auth/LogoutButton';
-import useSettings from '../../../hooks/queries/useSettings';
+import useSettings from '../../../core/hooks/queries/useSettings';
 import { Alert, Spinner, Title } from '../../Design';
 
 const Settings = () => {

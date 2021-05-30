@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
+import useMotionMoments from '../../../core/hooks/queries/useMotionMoments';
 import { route, Routes } from '../../../core/routing';
 import formatDateString from '../../../core/utils/formatDateString';
-import useMotionMoments from '../../../hooks/queries/useMotionMoments';
 import { Alert, Spinner, Title } from '../../Design';
 import Photo from './Photo';
 
