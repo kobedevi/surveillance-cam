@@ -1,17 +1,17 @@
 import firebase from 'firebase/app';
 import { useMutation, useQueryClient } from 'react-query';
 
-const useUpdateRecording = (motionId) => {
+const useUpdateRecording = (motionId, recordingId) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ id, changes }) => {
+    (changes) => {
       const db = firebase.firestore();
       const recordingRef = db
         .collection('camera')
         .doc(motionId)
         .collection('recordings')
-        .doc(id);
+        .doc(recordingId);
 
       return recordingRef.update(changes);
     },

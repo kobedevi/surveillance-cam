@@ -1,7 +1,6 @@
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import useMotionMoment from '../../../core/hooks/queries/useMotionMoment';
-import useUpdateRecording from '../../../core/hooks/mutations/useUpdateRecording';
 import { Routes } from '../../../core/routing';
 import formatDate from '../../../core/utils/formatDate';
 import { Alert, Spinner, Title } from '../../Design';
@@ -10,7 +9,6 @@ import VideoCard from './VideoCard';
 const TimelineDetail = () => {
   const { id } = useParams();
   const { data: motionMoment, ...query } = useMotionMoment(id);
-  const mutation = useUpdateRecording(id);
 
   if (query.isLoading) {
     return <Spinner />;
@@ -47,7 +45,11 @@ const TimelineDetail = () => {
 
       <section className="videos">
         {motionMoment.recordings.map((recording) => (
-          <VideoCard key={recording.id} recording={recording} mutation={mutation}/>
+          <VideoCard
+            key={recording.id}
+            recording={recording}
+            motionId={motionMoment.id}
+          />
         ))}
       </section>
     </>
