@@ -36,17 +36,18 @@ def start():
 		if Firestore.settings and Firestore.settings['running'] :
 			Motion.checkForMotion(f.array)
 		else: 
+			Motion.close()
 			sleep(0.025)
 
 		# Clear the stream in preparation for the next frame
 		rawCapture.truncate(0)
 
-# def stop():
-# 	global camera
+def stop():
+	global camera
 
-# 	Motion.clearCallbacks()
-# 	camera.close()
-# 	camera = None
+	Motion.clearCallbacks()
+	camera.close()
+	camera = None
 
 def addAnnotation():
 	# def addTimestamp():
