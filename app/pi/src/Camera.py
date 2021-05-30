@@ -14,19 +14,15 @@ camera = None
 # Set up camera
 def init():
 	global camera
-
 	camera = PiCamera()
 	camera.resolution = (640, 480)
 	camera.framerate = 25
 	camera.annotate_text_size = 15
 
 def start():
-	init()
-
 	# Allow the camera to adjust to lighting/white balance
 	sleep(2)
 	
-	# camera.annotate_text = datetime.now().strftime('%A %d %B %Y %H:%M:%S')
 	addAnnotation()
 
 	# Add callbacks to call when motion is detected
@@ -37,16 +33,20 @@ def start():
 	rawCapture = PiRGBArray(camera, size = camera.resolution)
 	# Start capturing frames
 	for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-		Motion.checkForMotion(f.array)
+		if Firestore.settings and Firestore.settings['running'] :
+			Motion.checkForMotion(f.array)
+		else: 
+			sleep(0.025)
+
 		# Clear the stream in preparation for the next frame
 		rawCapture.truncate(0)
 
-def stop():
-	global camera
+# def stop():
+# 	global camera
 
-	Motion.clearCallbacks()
-	camera.close()
-	camera = None
+# 	Motion.clearCallbacks()
+# 	camera.close()
+# 	camera = None
 
 def addAnnotation():
 	# def addTimestamp():

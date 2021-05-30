@@ -1,36 +1,28 @@
 from Firebase import Firebase
 from Firebase import Firestore
 import Camera
+from time import sleep
+
 import sys
 
-def changeCameraState(running):
-    if (running):
-        print('starting camera')
-        Camera.start()
-    else:
-        print('stopping camera')
-        Camera.stop()
 
-    # TODO: Test one-liner
-    # Camera.start() if running else Camera.stop()
+def tester(running):
+    print(running)
 
 def main():
     Firebase.init()
-    
-    # Attach snapshot listener and callbacks
-    Firestore.listenToSettings();
-    Firestore.onSettingsChange('running', changeCameraState);
+    Camera.init()
 
+    # Attach snapshot listener and callbacks
+    # Firestore.onSettingsChange('running', changeCameraState)
+    Firestore.listenToSettings()
     Camera.start()
 
-    while True:
-        print('waiting for next change')
-        Firestore.waitForSettingsChange()
-
+    
 try:
     main()
 except (KeyboardInterrupt, SystemExit):
     print('Exiting program')
 finally:
-    Camera.stop()
+    # Camera.stop()
     sys.exit(0)

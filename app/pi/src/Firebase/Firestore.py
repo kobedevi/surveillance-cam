@@ -1,3 +1,4 @@
+# from google.cloud import firestore
 from firebase_admin import firestore
 import threading
 
@@ -69,7 +70,6 @@ def addFileToDocument(fileName, field, dt):
 # APP COLLECTION
 
 settings = None
-changedKeys = []
 settingsChanged = threading.Event()
 onSettingsChangeCallbacks = {
     'running': [],
@@ -80,8 +80,7 @@ def getSettings():
     '''Get the settings document as a dict'''
 
     settings = _getCollection('app').document('settings').get()
-
-    return settings.to_dict();
+    return settings.to_dict()
 
 def listenToSettings():
     '''Listen to changes on the settings document.
@@ -92,46 +91,33 @@ def listenToSettings():
     '''
     def onSnapshot(docSnapshot, changes, readTime):
         global settings
-        global changedKeys
+        changedKeys = []
 
         settingsDoc = docSnapshot[0].to_dict()
 
         # Set settings on initial snapshot
         if (not settings):
-            settings = settingsDoc
-            return
-        
-        # Find changed keys
-        for key in settingsDoc:
-            if (settingsDoc[key] != settings[key]):
+            # settings = settingsDoc
+            for key in settingsDoc:
                 changedKeys.append(key)
+        else :
+            # Find changed keys
+            for key in settingsDoc:
+                if (settingsDoc[key] != settings[key]):
+                    changedKeys.append(key)        
 
         # Update and signal changes
         settings = settingsDoc
-        settingsChanged.set()
-
+        executeSettingsCallbacks(changedKeys)
+                
     settingsRef = _getCollection('app').document('settings')
     settingsRef.on_snapshot(onSnapshot)
 
-def waitForSettingsChange():
-    '''Wait for the settingsChanged event to set.
-    Then, execute the subscribed callbacks and clear the state.
-    '''
-
-    global changedKeys
-
-    # Wait for event
-    settingsChanged.wait()
-
-    # Execute callbacks
+def executeSettingsCallbacks(changedKeys):
     for key in changedKeys:
         for callback in onSettingsChangeCallbacks[key]:
             callback(settings[key])
-    
-    # Reset state
-    changedKeys = []
-    settingsChanged.clear()
-
+            
 def onSettingsChange(field, callback):
     '''Add a callback to execute when a field in the settings has changed.
 
@@ -142,6 +128,7 @@ def onSettingsChange(field, callback):
     '''
 
     onSettingsChangeCallbacks[field].append(callback)
+
 
 def removeRegistrationTokens(registrationTokens):
     '''Remove registration tokens from the settings document.
