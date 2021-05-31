@@ -1,29 +1,26 @@
+import { useState } from 'react';
 import { IoMdDownload, IoMdLock, IoMdUnlock } from 'react-icons/io';
 import useUpdateRecording from '../../../core/hooks/mutations/useUpdateRecording';
-import useStorageURL from '../../../core/hooks/queries/useStorageURL';
 import formatDate from '../../../core/utils/formatDate';
 import { Button } from '../../Design';
 import Video from './Video';
 
 const VideoCard = ({ recording, motionId }) => {
   const mutation = useUpdateRecording(motionId, recording.id);
+  const [videoURL, setVideoURL] = useState();
 
   const toggleLock = (recording) => {
     mutation.mutate({ lock: !recording.lock });
   };
-
-  const { data: videoURL, ...videoQuery } = useStorageURL(recording.video);
-  const { data: photoURL, ...photoQuery } = useStorageURL(recording.photo);
 
   return (
     <article key={recording.id}>
       <p>{formatDate(recording.timeOfMotion, 'H:mm')}</p>
       <div className="timeline"></div>
       <Video
-        videoQuery={videoQuery}
-        photoQuery={photoQuery}
-        videoURL={videoURL}
-        photoURL={photoURL}
+        videoPath={recording.video}
+        photoPath={recording.photo}
+        setVideoURL={setVideoURL}
       />
       <Button
         color={recording.lock ? 'primary' : 'muted'}
@@ -34,9 +31,10 @@ const VideoCard = ({ recording, motionId }) => {
         {recording.lock ? <IoMdLock /> : <IoMdUnlock />}
       </Button>
       <Button
-        color="secondary"
+        color={videoURL ? 'secondary' : 'muted'}
         className="download"
         onClick={() => window.open(videoURL)}
+        disabled={!videoURL}
       >
         <IoMdDownload />
       </Button>
