@@ -1,8 +1,9 @@
 from google.cloud import storage
-import os
+from os.path import dirname
 
 def getBucket():
-    storage_client = storage.Client.from_service_account_json(os.path.abspath("Firebase/serviceAccountKey.json"));
+    pathToKey = dirname(__file__) + '/serviceAccountKey.json'
+    storage_client = storage.Client.from_service_account_json(pathToKey);
     bucket = storage_client.bucket('iot-werkstuk.appspot.com')
 
     return bucket
@@ -27,13 +28,18 @@ def uploadFile(source, destination):
     blob.upload_from_filename(source)
     blob.make_public()
     print("File {} uploaded to {}.".format(source, destination))
-    #Delete local file
+
+    # Delete local file
     os.remove(source)
 
     return destination
 
+def deleteFile(fileName):
+    bucket = getBucket()
+    blob = bucket.blob(fileName)
+    blob.delete()
+
 def getPublicURL(path):
-    # Get blob
     bucket = getBucket()
     blob = bucket.blob(path)
     return blob.public_url
