@@ -1,5 +1,5 @@
 from google.cloud import storage
-from os.path import dirname
+import os
 
 def getBucket():
     storage_client = storage.Client.from_service_account_json(os.path.dirname(__file__) + '/serviceAccountKey.json')
