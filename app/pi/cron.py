@@ -2,7 +2,6 @@ from src.Firebase import Firebase
 from src.Firebase import Firestore
 from src.Firebase import Storage
 from datetime import datetime, timedelta
-from time import sleep
 import sys
 
 def main():
