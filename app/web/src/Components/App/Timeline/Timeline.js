@@ -46,16 +46,18 @@ const Timeline = () => {
             <h2>{group.day}</h2>
             <div className="timeline-group">
               {group.values.map((mm) => (
-                <Link className="Timeline-card" to={route(Routes.TimelineDetail, { id: mm.id })}>
-                  <article key={mm.id}>
+                <Link
+                  key={mm.id}
+                  className="timeline-card"
+                  to={route(Routes.TimelineDetail, { id: mm.id })}
+                >
+                  <article>
                     <Photo path={mm.preview} />
                     <p>
                       {formatDate(mm.firstMotion, 'H:mm')}&nbsp;-&nbsp;
                       {formatDate(mm.lastMotion, 'H:mm')}
                     </p>
-                    <Link to={route(Routes.TimelineDetail, { id: mm.id })}>
-                      View&nbsp;recordings
-                    </Link>
+                    <p className="link">View&nbsp;recordings</p>
                   </article>
                 </Link>
               ))}
