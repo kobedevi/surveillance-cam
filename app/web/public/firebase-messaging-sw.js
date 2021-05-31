@@ -6,12 +6,3 @@ importScripts('/__/firebase/8.6.1/firebase-messaging.js');
 importScripts('/__/firebase/init.js');
 
 const messaging = firebase.messaging();
-
-// messaging.onMessage((payload) => {
-//   const notificationTitle = 'From sw onMessage';
-//   const notificationOptions = {
-//     body: payload,
-//   };
-
-//   self.registration.showNotification(notificationTitle, notificationOptions);
-// });
