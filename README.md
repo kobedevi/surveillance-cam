@@ -65,7 +65,7 @@ pip install google-cloud-storage -U
   - Run `crontab -e` to edit the cron table
   - Write `0 0 * * * python3 /home/pi/surveillance-camera/app/pi/cron.py` (adjust the path if needed)
   - Save and exit
-- Run `cd surveillance-camera/app/pi/src && python3 main.py`
+- Run `cd surveillance-camera && python3 app/pi/src/main.py`
 
 ### Dashboard
 
