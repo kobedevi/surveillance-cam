@@ -1,51 +1,76 @@
-# Werkstuk Examen IoT
+# Surveillance camera
 
-## Team
+This project consists of a security camera that will send a push notification with a picture when motion is detected. After detecting motion, a recording will be made and uploaded to Firebase. The dashboard can be used to enable/disable the camera, view the timeline of recordings, and change the settings.
 
-Kobe Devillé  
-Dante Weverbergh  
-Jonas Di Dier
+_WIP: Mention led and buzzer_
 
-## Hoe camera installeren
-Verdere instructies: https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2
- - Verbind camera met pi
- - Go naar het hoofdmenu > Preferences > Raspberr Pi Configuration
- - Selecteer de interfaces tab en zet de Camera optie op enabled 
- - Herstart de pi
+**Team:** Kobe Devillé, Jonas Di Dier, Dante Weverbergh
 
-## Installeer de volgende dependencies
-  ```
-  pip install firebase -U
-  pip install firebase-admin -U
-  pip install google-cloud-storage -U
+## Screenshots
 
-  pip3 install opencv-python
-  sudo apt-get install libcblas-dev
-  sudo apt-get install libhdf5-dev
-  sudo apt-get install libhdf5-serial-dev
-  sudo apt-get install libatlas-base-dev
-  sudo apt-get install libjasper-dev
-  sudo apt-get install libqtgui4
-  sudo apt-get install libqt4-test
-  sudo apt install -y gpac
-  ```
+_WIP: Add more and final screenshot_
+_TIP: Write images on same line to place them side by side_
 
-## Pi starten
- - **App moet uit deze folder gestart worden**
-   - navigeer naar app/pi/src
-   - run ``` python3 main.py ```
+![localhost-3000-timeline-Moto-G4.png](https://i.postimg.cc/Y2Ywymcm/localhost-3000-timeline-Moto-G4.png)
 
-## App starten
+## Installation
 
-  - Ga naar volgende link op mobile: https://iot-werkstuk.web.app/
-  - Installeer als PWA
+### Required hardware
 
-## App login
-**Email:**  
+- [x] Raspberry pi
+- [x] Camera module
+- [x] Led light
+- [x] Buzzer
+- [x] Jumper cables and a resistor
+- [x] Breadboard (optional)
+
+### Camera
+
+- Connect the camera with your Raspberry Pi
+- Enable the camera
+  - GUI: Menu > Preferences > Raspberry Pi Configuration > Interfaces
+  - CLI: `sudo raspi-config` > Interfacing Options
+- Reboot
+
+### Led and buzzer
+
+_WIP: Led and buzzer setup guide_
+
+### Dependencies
+
+_WIP: Review commands (consistent use of pip/pip3, apt/apt-get; remove useless commands)_
+
+Run these commands to install the necessary dependencies
+
 ```
-user@iot.com
+sudo apt-get install libcblas-dev
+sudo apt-get install libhdf5-dev
+sudo apt-get install libhdf5-serial-dev
+sudo apt-get install libatlas-base-dev
+sudo apt-get install libjasper-dev
+sudo apt-get install libqtgui4
+sudo apt-get install libqt4-test
+sudo apt install -y gpac
+
+pip3 install opencv-python
+pip install firebase -U
+pip install firebase-admin -U
+pip install google-cloud-storage -U
 ```
-**Password:**  
-```
-password
-```
+
+### Run the program
+
+- Clone this repository to your Raspberry Pi `git clone https://github.com/gdmgent-iot/werkstuk-examen-2021-team-kobe-dante-jonas.git surveillance-camera`
+- Run `cd surveillance-camera/app/pi/src && python3 main.py`
+
+### Dashboard
+
+- Visit https://iot-werkstuk.web.app on a mobile device
+- Install the application as a PWA (_Add to home screen_)
+- Open the application from your home screen and log in with the following credentials
+  - Email: `user@iot.com`
+  - Password: `password`
+
+## Credits
+
+Icon made by [Freepik](https://www.freepik.com) from [www.flaticon.com](https://www.flaticon.com)
