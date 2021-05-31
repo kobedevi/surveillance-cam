@@ -30,8 +30,12 @@
     background-color: transparent;
   }
 
-  &:hover {
+  &:hover:enabled {
     filter: brightness(1.25);
+  }
+
+  &:disabled {
+    cursor: default;
   }
 }
 
