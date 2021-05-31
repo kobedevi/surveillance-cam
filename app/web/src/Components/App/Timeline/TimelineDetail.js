@@ -1,12 +1,10 @@
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { IoMdDownload, IoMdLock, IoMdUnlock } from 'react-icons/io';
+import useMotionMoment from '../../../core/hooks/queries/useMotionMoment';
 import { Routes } from '../../../core/routing';
-import formatDateString from '../../../core/utils/formatDateString';
-import formatTimestamp from '../../../core/utils/formatTimestamp';
-import useMotionMoment from '../../../hooks/queries/useMotionMoment';
-import { Alert, Button, Spinner, Title } from '../../Design';
-import Video from './Video';
+import formatDate from '../../../core/utils/formatDate';
+import { Alert, Spinner, Title } from '../../Design';
+import VideoCard from './VideoCard';
 
 const TimelineDetail = () => {
   const { id } = useParams();
@@ -22,28 +20,36 @@ const TimelineDetail = () => {
 
   return (
     <>
-      <Link to={Routes.Timeline}>Back</Link>
+      <Link to={Routes.Timeline} className="return">
+        Back
+      </Link>
 
-      <Title>{formatDateString(motionMoment.id)}</Title>
+      <Title>{formatDate(motionMoment.id, 'D MMM - H:mm')}</Title>
 
-      <dl>
-        <dt>First motion</dt>
-        <dd>{formatTimestamp(motionMoment.firstMotion)}</dd>
-        <dt>Last motion</dt>
-        <dd>{formatTimestamp(motionMoment.lastMotion)}</dd>
-      </dl>
+      <p className="motion-time">
+        {motionMoment.firstMotion.seconds ===
+        motionMoment.lastMotion.seconds ? (
+          <em>
+            Motion detected at {formatDate(motionMoment.firstMotion, 'H:mm:ss')}
+            .
+          </em>
+        ) : (
+          <em>
+            First motion was detected at{' '}
+            {formatDate(motionMoment.firstMotion, 'H:mm:ss')}.<br />
+            Last motion occured at{' '}
+            {formatDate(motionMoment.lastMotion, 'H:mm:ss')}.
+          </em>
+        )}
+      </p>
 
       <section className="videos">
-        {motionMoment.videos.map((path, i) => (
-          <article key={path}>
-            <Video videoPath={path} photoPath={motionMoment.photos[i]} />
-            <Button color="muted" className="lock">
-              <IoMdUnlock />
-            </Button>
-            <Button color="secondary" className="download">
-              <IoMdDownload />
-            </Button>
-          </article>
+        {motionMoment.recordings.map((recording) => (
+          <VideoCard
+            key={recording.id}
+            recording={recording}
+            motionId={motionMoment.id}
+          />
         ))}
       </section>
     </>

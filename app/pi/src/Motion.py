@@ -101,6 +101,13 @@ def handleNoMotionFrame():
     else: 
         motionFrames = 0
 
+
+def close():
+    global noMotionFrames
+    noMotionFrames = MOTION_THRESHOLD -1
+    handleNoMotionFrame()
+
+
 def onMotion(callback):
     '''Add a callback to execute when motion threshold is reached
 

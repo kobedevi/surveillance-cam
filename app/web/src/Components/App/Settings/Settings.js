@@ -1,6 +1,7 @@
 import LogoutButton from '../Auth/LogoutButton';
-import useSettings from '../../../hooks/queries/useSettings';
+import useSettings from '../../../core/hooks/queries/useSettings';
 import { Alert, Spinner, Title } from '../../Design';
+import Slider from '../../Design/form/Slider';
 
 const Settings = () => {
   const { data: settings, ...query } = useSettings();
@@ -26,6 +27,10 @@ const Settings = () => {
           </li>
         ))}
       </ul>
+      
+      <form>
+        <Slider name="Test input" min="400" max="900" step="25"/>
+      </form>
 
       <LogoutButton />
     </>

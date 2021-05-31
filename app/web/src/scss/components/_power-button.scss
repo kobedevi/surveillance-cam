@@ -1,0 +1,57 @@
+.power-button {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+
+  button {
+    width: 15rem;
+    height: 15rem;
+    border-radius: 7.5rem;
+    box-shadow: 0 0 31px 5px rgba(0, 0, 0, 0.35);
+    background-color: $background-muted;
+    font-size: 7.5rem;
+    transition: background-color .1s;
+
+    &.active {
+      background-color: $secondary-color;
+    }
+  }
+
+  p {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .power-button {
+    button {
+      width: 20rem;
+      height: 20rem;
+      border-radius: 10rem;
+      font-size: 10rem;
+    }
+
+    p {
+      font-size: 2rem;
+    }
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .power-button {
+    button {
+      width: 30rem;
+      height: 30rem;
+      border-radius: 15rem;
+      font-size: 15rem;
+    }
+
+    p {
+      font-size: 3rem;
+    }
+  }
+}

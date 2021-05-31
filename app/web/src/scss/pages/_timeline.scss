@@ -1,0 +1,10 @@
+.timeline {
+  h2 {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .timeline-group + h2 {
+    margin-top: 2rem;
+  }
+}

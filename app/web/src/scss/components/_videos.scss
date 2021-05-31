@@ -5,13 +5,45 @@
 
   article {
     display: grid;
-    column-gap: 1rem;
+    row-gap: 0.25rem;
+    column-gap: 0.6rem;
     grid-template-areas:
-      'video lock'
-      'video download';
-    grid-template-columns: 1fr auto;
+      'time timeline video lock'
+      'time timeline video download';
+    grid-template-columns: auto auto 1fr auto;
     grid-template-rows: 1fr 1fr;
     place-items: center;
+
+    p {
+      grid-area: time;
+      align-self: start;
+      text-align: right;
+    }
+
+    .timeline {
+      grid-area: timeline;
+      align-self: start;
+      height: calc(100% + 2.5rem);
+      width: 1rem;
+      border-radius: 0.5rem;
+      background-color: $background-muted;
+      position: relative;
+
+      &:after {
+        content: ' ';
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: white;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 0.5rem;
+      }
+    }
+
+    &:last-of-type .timeline {
+      height: 100%;
+    }
 
     video {
       grid-area: video;
@@ -32,7 +64,23 @@
 @media screen and (min-width: 768px) {
   .videos {
     article {
-      column-gap: 3rem;
+      column-gap: 2.5rem;
+
+      p {
+        font-size: 1.25rem;
+      }
+
+      .timeline {
+        height: calc(100% + 3rem);
+        width: 1.5rem;
+        border-radius: 0.75rem;
+
+        &:after {
+          width: 1.5rem;
+          height: 1.5rem;
+          border-radius: 0.75rem;
+        }
+      }
     }
   }
 }

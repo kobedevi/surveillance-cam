@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
-import useRegistrationToken from '../../hooks/useRegistrationToken';
+import useRegistrationToken from '../../core/hooks/useRegistrationToken';
 import Navbar from './Navbar/Navbar';
 import MainRouting from './MainRouting';
 

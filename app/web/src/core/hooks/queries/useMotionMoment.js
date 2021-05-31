@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 
 const getMotionMoment = async (id) => {
   const db = firebase.firestore();
@@ -9,12 +9,20 @@ const getMotionMoment = async (id) => {
     throw new Error('Invalid id');
   }
 
-  return { id: motionMoment.id, ...motionMoment.data() };
+  const recordings = await db
+    .collection('camera')
+    .doc(id)
+    .collection('recordings')
+    .get();
+
+  return {
+    id: motionMoment.id,
+    ...motionMoment.data(),
+    recordings: recordings.docs.map((r) => ({ id: r.id, ...r.data() })),
+  };
 };
 
 const useMotionMoment = (id) => {
-  const queryClient = useQueryClient();
-
   return useQuery(
     ['motionMoments', id],
     () => {
@@ -22,8 +30,6 @@ const useMotionMoment = (id) => {
     },
     {
       staleTime: 5 * 1000,
-      initialData: () =>
-        queryClient.getQueryData('motionMoments')?.find((mm) => mm.id === id),
     }
   );
 };
