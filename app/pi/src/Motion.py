@@ -1,6 +1,7 @@
 import cv2
 import threading
 from datetime import datetime
+import pytz
 
 MOTION_THRESHOLD = 50 # Number of consecutive frames where motion is detected
 CONTOUR_MIN_AREA = 800 # Minimum contour area to qualify as motion (cv2.findContours())
@@ -72,7 +73,7 @@ def handleMotionFrame():
     # Check if threshold is reached (i.e. motion detected)
     if (motionFrames == MOTION_THRESHOLD):
         # Execute callbacks with time of motion
-        timeOfMotion = datetime.now()
+        timeOfMotion = pytz.timezone('Europe/Brussels').localize(datetime.now())
         for callback in onMotionCallbacks:
             threading.Thread(target=callback, args=(timeOfMotion,)).start()
 
