@@ -8,8 +8,6 @@ const SettingsForm = ({ settings }) => {
   const [formData, setFormData] = useState(settings);
   const mutation = useUpdateSettings();
 
-  console.log(formData);
-
   const handleInput = (e) => {
     const value =
       e.target.type === 'checkbox'
@@ -72,6 +70,17 @@ const SettingsForm = ({ settings }) => {
         max="2000"
         step="100"
         info="The minimum size of the area in the frame to count as motion. Default is 800."
+      />
+
+      <Slider
+        name="docStaleTime"
+        label="Time between groups"
+        value={formData.docStaleTime}
+        onChange={handleInput}
+        min="1"
+        max="15"
+        step="1"
+        info="The duration in minutes between two detection before a new group is created. Default is 5."
       />
 
       {!equals(settings, formData) && (

@@ -116,3 +116,19 @@
     grid-area: info;
   }
 }
+
+@media screen and (min-width: 768px) {
+  .form-input {
+    margin-bottom: 1.75rem;
+
+    label {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .form-input--checkbox {
+    label {
+      margin-bottom: 0;
+    }
+  }
+}
