@@ -24,7 +24,6 @@ def uploadFile(source, destination):
     blob = bucket.blob(destination)
 
     # Upload file
-    path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     blob.upload_from_filename(source)
     blob.make_public()
     print("File {} uploaded to {}.".format(source, destination))

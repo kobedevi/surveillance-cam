@@ -7,10 +7,10 @@ import os
 from Firebase import Firestore
 from Firebase import Messaging
 from Firebase import Storage
-import Motion
+from Camera import Motion
 
 camera = None
-outPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'out/')
+outPath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'out/')
 
 # Set up camera
 def init():
