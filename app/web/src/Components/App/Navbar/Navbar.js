@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
-import { IoMdHome, IoMdSettings, IoMdVideocam } from 'react-icons/io';
+import { IoMdOptions, IoMdVideocam } from 'react-icons/io';
+import { BsFillCollectionPlayFill } from 'react-icons/bs';
 import { Routes } from '../../../core/routing';
 
 const Navbar = () => {
@@ -11,19 +12,19 @@ const Navbar = () => {
         to={Routes.Settings}
         className={pathname.includes(Routes.Settings) ? 'active' : ''}
       >
-        <IoMdSettings />
+        <IoMdOptions />
       </Link>
       <Link
         to={Routes.Home}
         className={pathname.includes(Routes.Home) ? 'active' : ''}
       >
-        <IoMdHome />
+        <IoMdVideocam />
       </Link>
       <Link
         to={Routes.Timeline}
         className={pathname.includes(Routes.Timeline) ? 'active' : ''}
       >
-        <IoMdVideocam />
+        <BsFillCollectionPlayFill />
       </Link>
     </nav>
   );

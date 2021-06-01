@@ -1,9 +1,8 @@
 from google.cloud import storage
-from os.path import dirname
+import os
 
 def getBucket():
-    pathToKey = dirname(__file__) + '/serviceAccountKey.json'
-    storage_client = storage.Client.from_service_account_json(pathToKey);
+    storage_client = storage.Client.from_service_account_json(os.path.dirname(__file__) + '/serviceAccountKey.json')
     bucket = storage_client.bucket('iot-werkstuk.appspot.com')
 
     return bucket
@@ -25,6 +24,7 @@ def uploadFile(source, destination):
     blob = bucket.blob(destination)
 
     # Upload file
+    path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     blob.upload_from_filename(source)
     blob.make_public()
     print("File {} uploaded to {}.".format(source, destination))
