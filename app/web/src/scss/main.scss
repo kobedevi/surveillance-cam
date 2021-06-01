@@ -6,16 +6,17 @@
 @import 'base/base';
 
 @import 'components/alert';
-@import 'components/power-button';
 @import 'components/button';
+@import 'components/inputs';
+@import 'components/power-button';
 @import 'components/spinner';
 @import 'components/timeline-group';
 @import 'components/title';
 @import 'components/videos';
-@import 'components/inputs';
 
 @import 'pages/home';
 @import 'pages/login';
+@import 'pages/settings';
 @import 'pages/timeline';
 @import 'pages/timeline-details';
 

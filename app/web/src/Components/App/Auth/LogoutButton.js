@@ -8,7 +8,7 @@ const LogoutButton = () => {
 
   return (
     <Button onClick={logout} icon={false}>
-      Uitloggen
+      Logout
     </Button>
   );
 };
