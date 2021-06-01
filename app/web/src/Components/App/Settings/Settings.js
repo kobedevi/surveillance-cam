@@ -1,7 +1,7 @@
 import LogoutButton from '../Auth/LogoutButton';
 import useSettings from '../../../core/hooks/queries/useSettings';
 import { Alert, Spinner, Title } from '../../Design';
-import Slider from '../../Design/form/Slider';
+import SettingsForm from './SettingsForm';
 
 const Settings = () => {
   const { data: settings, ...query } = useSettings();
@@ -14,26 +14,17 @@ const Settings = () => {
     return <Alert color="danger">{query.error.message}</Alert>;
   }
 
+  // Get all editable fields
+  const { running, registrationTokens, ...formData } = settings;
+
   return (
-    <>
+    <section className="settings">
       <Title>Settings</Title>
 
-      <Alert>This is an example alert</Alert>
-
-      <ul>
-        {Object.entries(settings).map(([key, value]) => (
-          <li key={key}>
-            {key}: {value.toString()}
-          </li>
-        ))}
-      </ul>
-      
-      <form>
-        <Slider name="Test input" min="400" max="900" step="25"/>
-      </form>
-
       <LogoutButton />
-    </>
+
+      <SettingsForm settings={formData} />
+    </section>
   );
 };
 
