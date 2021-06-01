@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useUpdateSettings from '../../../core/hooks/mutations/useUpdateSettings';
 import equals from '../../../core/utils/equals';
 import { Button } from '../../Design';
-import { Checkbox, Slider } from '../../Design/Form';
+import { Checkbox, Slider } from '../../Design/form';
 
 const SettingsForm = ({ settings }) => {
   const [formData, setFormData] = useState(settings);
