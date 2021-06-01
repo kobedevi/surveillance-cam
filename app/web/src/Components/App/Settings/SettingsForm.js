@@ -43,13 +43,6 @@ const SettingsForm = ({ settings }) => {
         onChange={handleInput}
       />
 
-      <Checkbox
-        name="buzzer"
-        label="Enable buzzer"
-        checked={formData.buzzer}
-        onChange={handleInput}
-      />
-
       <Slider
         name="motionThreshold"
         label="Motion threshold"
