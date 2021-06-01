@@ -51,7 +51,6 @@ def stop():
 	camera = None
 
 def addAnnotation():
-	# def addTimestamp():
 	global camera
 
 	# Show timestamp

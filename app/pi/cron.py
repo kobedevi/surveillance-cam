@@ -2,12 +2,14 @@ from src.Firebase import Firebase
 from src.Firebase import Firestore
 from src.Firebase import Storage
 from datetime import datetime, timedelta
+import pytz
+from time import sleep
 import sys
 
 def main():
   Firebase.init()
 
-  lastWeek = datetime.now() - timedelta(7)
+  lastWeek = pytz.timezone('Europe/Brussels').localize(datetime.now()) - timedelta(7)
   oldDocs = Firestore.getOldDocs(lastWeek)
 
   for doc in oldDocs:
