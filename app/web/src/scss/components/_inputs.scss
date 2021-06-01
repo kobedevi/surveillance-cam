@@ -32,7 +32,6 @@
     cursor: pointer;
   }
 
-  /* Checkbox */
   input[type='checkbox'] {
     appearance: none;
     width: 1.5rem;
@@ -92,11 +91,24 @@
       -webkit-appearance: none;
       width: 1.5rem;
       height: 1.5rem;
-      cursor: ew-resize;
-      background: #fff;
       border: 3px solid $background-muted;
       box-shadow: -24.75rem 0 0 24rem $primary-color;
       border-radius: 0.75rem;
+      background-color: $text-color;
+      cursor: ew-resize;
+    }
+
+    &::-moz-range-progress {
+      height: 1.5rem;
+      background-color: $primary-color;
+    }
+
+    &::-moz-range-thumb {
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 3px solid $background-muted;
+      border-radius: 0.75rem;
+      cursor: ew-resize;
     }
   }
 
