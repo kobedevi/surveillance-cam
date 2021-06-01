@@ -10,7 +10,7 @@ from Firebase import Storage
 from Camera import Motion
 
 camera = None
-outPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'out/')
+outPath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'out/')
 
 # Set up camera
 def init():
