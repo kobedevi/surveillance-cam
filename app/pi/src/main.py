@@ -1,6 +1,6 @@
 from Firebase import Firebase
 from Firebase import Firestore
-import Camera
+from Camera import Camera
 from time import sleep
 import sys
 
