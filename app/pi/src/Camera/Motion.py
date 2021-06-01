@@ -14,8 +14,6 @@ onMotionEndCallbacks = [] # Callbacks to execute when noMotionFrames reaches thr
 timeOfMotion = None # Time when current motion started
 
 def checkForMotion(frame):
-    global motionFrames
-    print(motionFrames)
     '''Compares the current frame with the average frame and
     increments motion frames if the difference exceeds CONTOUR_MIN_AREA.
     If no average is set, it will use the frame to set the initial average.
@@ -23,6 +21,8 @@ def checkForMotion(frame):
     Args:
         frame (array): The array returned when reading PiArrayOutput.array.
     '''
+
+    global motionFrames
 
     # Convert frame to grayscale and blur
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -77,6 +77,7 @@ def handleMotionFrame():
         for callback in onMotionCallbacks:
             threading.Thread(target=callback, args=(timeOfMotion,)).start()
 
+
 def handleNoMotionFrame():
     '''Increment noMotionFrames. Execute callbacks and reset if threshold is reached
         Resets if motionFrames has not reached threshold (i.e. currently no motion)
@@ -104,6 +105,8 @@ def handleNoMotionFrame():
 
 
 def close():
+    '''Trigger end of motion manually.'''
+
     global noMotionFrames
     noMotionFrames = MOTION_THRESHOLD -1
     handleNoMotionFrame()
@@ -119,6 +122,7 @@ def onMotion(callback):
 
     onMotionCallbacks.append(callback)
 
+
 def onMotionEnd(callback):
     '''Add a callback to execute when motion threshold is reset after reaching threshold
 
@@ -129,7 +133,10 @@ def onMotionEnd(callback):
 
     onMotionEndCallbacks.append(callback)
 
+
 def clearCallbacks():
+    '''Clear all callbacks from the global lists'''
+
     global onMotionCallbacks
     global onMotionEndCallbacks
 
