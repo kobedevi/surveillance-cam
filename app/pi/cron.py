@@ -11,7 +11,7 @@ def main():
 
   settings = Firestore.getSettings()
 
-  removeDate = pytz.timezone('Europe/Brussels').localize(datetime.now()) - timedelta(settings['daysBeforeRemoval]')
+  removeDate = pytz.timezone('Europe/Brussels').localize(datetime.now()) - timedelta(settings['daysBeforeRemoval'])
   oldDocs = Firestore.getOldDocs(removeDate)
 
   for doc in oldDocs:
