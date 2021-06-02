@@ -3,7 +3,7 @@ from firebase_admin import credentials
 import os
 
 def init():
-  '''Initialize the Firebase connection.'''
+  '''Initialize the Firebase connection'''
   
   pathToKey = os.path.dirname(__file__) + '/serviceAccountKey.json'
 

@@ -14,12 +14,14 @@ const Navbar = () => {
       >
         <IoMdOptions />
       </Link>
+
       <Link
         to={Routes.Home}
         className={pathname.includes(Routes.Home) ? 'active' : ''}
       >
         <IoMdVideocam />
       </Link>
+
       <Link
         to={Routes.Timeline}
         className={pathname.includes(Routes.Timeline) ? 'active' : ''}

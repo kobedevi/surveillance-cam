@@ -13,7 +13,6 @@ from Actuators import Led
 camera = None
 outPath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'out/')
 
-# Set up camera
 def init():
 	'''Initialize the camera object'''
 
@@ -58,6 +57,7 @@ def stop():
 	Motion.clearCallbacks()
 	camera.close()
 	camera = None
+
 
 def addAnnotation():
 	'''Add a timestamp as annotation to the camera output.'''

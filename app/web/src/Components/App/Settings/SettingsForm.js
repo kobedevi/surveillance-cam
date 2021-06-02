@@ -43,13 +43,6 @@ const SettingsForm = ({ settings }) => {
         onChange={handleInput}
       />
 
-      <Checkbox
-        name="buzzer"
-        label="Enable buzzer"
-        checked={formData.buzzer}
-        onChange={handleInput}
-      />
-
       <Slider
         name="motionThreshold"
         label="Motion threshold"
@@ -81,6 +74,17 @@ const SettingsForm = ({ settings }) => {
         max="15"
         step="1"
         info="The duration in minutes between two detection before a new group is created. Default is 5."
+      />
+
+      <Slider
+        name="daysBeforeRemoval"
+        label="Days to keep recordings"
+        value={formData.daysBeforeRemoval}
+        onChange={handleInput}
+        min="1"
+        max="30"
+        step="1"
+        info="The number of days before recordings are automatically removed (unless locked). Default is 7."
       />
 
       {!equals(settings, formData) && (

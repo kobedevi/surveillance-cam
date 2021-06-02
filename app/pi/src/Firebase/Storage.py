@@ -2,7 +2,7 @@ from google.cloud import storage
 import os
 
 def getBucket():
-    '''Get the default Storage bucket'''
+    '''Get the default Storage bucket.'''
 
     storage_client = storage.Client.from_service_account_json(os.path.dirname(__file__) + '/serviceAccountKey.json')
     bucket = storage_client.bucket('iot-werkstuk.appspot.com')
@@ -11,7 +11,7 @@ def getBucket():
 
 
 def uploadFile(source, destination):
-    '''Upload a file to the Firebase Storage
+    '''Upload a file to the Firebase Storage.
 
     Args:
         source (string): The location of the file to be uploaded
@@ -38,7 +38,7 @@ def uploadFile(source, destination):
 
 
 def deleteFile(path):
-    '''Delete a file from the Firebase Storage
+    '''Delete a file from the Firebase Storage.
 
     Args:
         path (string): The name of the file in the Storage
@@ -51,7 +51,7 @@ def deleteFile(path):
 
 
 def getPublicURL(path):
-    '''Get the URL of a file in the Firebase Storage
+    '''Get the URL of a file in the Firebase Storage.
 
     Args:
         path (string): The path to the file in the Storage
