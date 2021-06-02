@@ -1,5 +1,4 @@
 from firebase_admin import firestore
-import threading
 
 # CAMERA COLLECTION
 
@@ -26,8 +25,9 @@ def createDocument(dt, fileName):
 
     return docRef
 
+
 def addFileToDocument(fileName, field, dt):
-    '''Update the correct Firestore document with a reference to the file inside a subcollection.
+    '''Update the correct Firestore document with a reference to the file inside the recordings subcollection.
     Create a new document when the previous document has become stale.
 
     Args:
@@ -46,16 +46,14 @@ def addFileToDocument(fileName, field, dt):
     doc = docRef.get().to_dict()
 
     # Compare time
-    lastMotion = doc['lastMotion'].replace(tzinfo=None)
+    lastMotion = doc['lastMotion']
     timeSinceLastMotion = dt.timestamp() - lastMotion.timestamp()
 
-    if (timeSinceLastMotion > DOC_STALE_TIME):
+    if (timeSinceLastMotion > settings['docStaleTime'] * 60):
         docRef = createDocument(dt, fileName)
     
     # Update document
-    docRef.update({
-        'lastMotion': dt
-    })
+    docRef.update({ 'lastMotion': dt })
 
     # Add file to recordings subcollection
     recName = dt.strftime('%Y%m%dT%H%M%S')
@@ -66,13 +64,13 @@ def addFileToDocument(fileName, field, dt):
         'lock': False,
     }, merge=True)
 
+
 # APP COLLECTION
 
 settings = None
-settingsChanged = threading.Event()
 onSettingsChangeCallbacks = {
+    'led': [],
     'running': [],
-    'registrationTokens': [],
 }
 
 def getSettings():
@@ -81,42 +79,52 @@ def getSettings():
     settings = _getCollection('app').document('settings').get()
     return settings.to_dict()
 
+
 def listenToSettings():
     '''Listen to changes on the settings document.
     On snapshot:
+     - Find the keys that changed value
      - Update the global settings dict with the new document
-     - Store the changed keys in the global changedKeys list
-     - Signal changes with the global Event
+     - Execute all callbacks that listen to the changed key
     '''
     def onSnapshot(docSnapshot, changes, readTime):
         global settings
-        changedKeys = []
 
         settingsDoc = docSnapshot[0].to_dict()
 
-        # Set settings on initial snapshot
+        # Find changed keys
+        changedKeys = []
         if (not settings):
-            # settings = settingsDoc
             for key in settingsDoc:
                 changedKeys.append(key)
         else :
-            # Find changed keys
             for key in settingsDoc:
                 if (settingsDoc[key] != settings[key]):
                     changedKeys.append(key)        
 
-        # Update and signal changes
+        # Update settings
         settings = settingsDoc
+
+        # Execute listeners of the changed keys
         executeSettingsCallbacks(changedKeys)
                 
     settingsRef = _getCollection('app').document('settings')
     settingsRef.on_snapshot(onSnapshot)
 
+
 def executeSettingsCallbacks(changedKeys):
+    '''Execute all callbacks that listen to the given keys
+    
+    Args:
+        changedKeys (list): The list of changed keys
+    '''
+
     for key in changedKeys:
-        for callback in onSettingsChangeCallbacks[key]:
-            callback(settings[key])
-            
+        if key in onSettingsChangeCallbacks:
+            for callback in onSettingsChangeCallbacks[key]:
+                callback(settings[key])
+
+         
 def onSettingsChange(field, callback):
     '''Add a callback to execute when a field in the settings has changed.
 
@@ -128,7 +136,6 @@ def onSettingsChange(field, callback):
 
     onSettingsChangeCallbacks[field].append(callback)
 
-
 def removeRegistrationTokens(registrationTokens):
     '''Remove registration tokens from the settings document.
 
@@ -139,10 +146,18 @@ def removeRegistrationTokens(registrationTokens):
     settingsRef = _getCollection('app').document('settings')
     settingsRef.update({'registrationTokens': firestore.ArrayRemove(registrationTokens)})
 
+
 # CRON JOB
 
 def getOldDocs(dt):
+    '''Get all documents from the camera collection where the last motion occured before a given time
+    
+    Args:
+        dt (datetime): The time that defines a document as 'old'
+    '''
+
     return _getCollection('camera').where('lastMotion', '<', dt).get()
+
 
 # HELPERS
 

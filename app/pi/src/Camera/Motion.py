@@ -1,9 +1,8 @@
 import cv2
 import threading
 from datetime import datetime
-
-MOTION_THRESHOLD = 50 # Number of consecutive frames where motion is detected
-CONTOUR_MIN_AREA = 800 # Minimum contour area to qualify as motion (cv2.findContours())
+import pytz
+from Firebase import Firestore
 
 avg = None # The initial frame to compare the other frames with
 motionFrames = 0 # Current amount of frames where motion is detected
@@ -13,8 +12,6 @@ onMotionEndCallbacks = [] # Callbacks to execute when noMotionFrames reaches thr
 timeOfMotion = None # Time when current motion started
 
 def checkForMotion(frame):
-    global motionFrames
-    print(motionFrames)
     '''Compares the current frame with the average frame and
     increments motion frames if the difference exceeds CONTOUR_MIN_AREA.
     If no average is set, it will use the frame to set the initial average.
@@ -23,6 +20,8 @@ def checkForMotion(frame):
         frame (array): The array returned when reading PiArrayOutput.array.
     '''
 
+    global motionFrames
+    print(motionFrames)
     # Convert frame to grayscale and blur
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
@@ -40,9 +39,6 @@ def checkForMotion(frame):
     # Threshold and dilate the difference
     thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
     thresh = cv2.dilate(thresh, None, iterations=2)
-    
-    # show the result
-    # cv2.imshow("Delta + Thresh", thresh)
 
     # Find contours
     contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -52,9 +48,9 @@ def checkForMotion(frame):
         handleNoMotionFrame()
         return
     
-    # find the index of the largest contour
+    # Check if a contour exceeds the minimum contour area
     for c in contours:
-        if cv2.contourArea(c) > CONTOUR_MIN_AREA:
+        if cv2.contourArea(c) > Firestore.settings['contourArea']:
             handleMotionFrame()
             break
 
@@ -70,11 +66,12 @@ def handleMotionFrame():
     noMotionFrames = 0
 
     # Check if threshold is reached (i.e. motion detected)
-    if (motionFrames == MOTION_THRESHOLD):
+    if (motionFrames == Firestore.settings['motionThreshold']):
         # Execute callbacks with time of motion
-        timeOfMotion = datetime.now()
+        timeOfMotion = pytz.timezone('Europe/Brussels').localize(datetime.now())
         for callback in onMotionCallbacks:
             threading.Thread(target=callback, args=(timeOfMotion,)).start()
+
 
 def handleNoMotionFrame():
     '''Increment noMotionFrames. Execute callbacks and reset if threshold is reached
@@ -85,11 +82,11 @@ def handleNoMotionFrame():
     global timeOfMotion
 
     # If there is currently motion detected
-    if (motionFrames >= MOTION_THRESHOLD):
+    if (motionFrames >= Firestore.settings['motionThreshold']):
         noMotionFrames += 1
 
         # Check if threshold is reached (i.e. motion ended)
-        if (noMotionFrames == MOTION_THRESHOLD):  
+        if (noMotionFrames == Firestore.settings['motionThreshold']):  
             # Execute callbacks with time of motion      
             for callback in onMotionEndCallbacks:
                 threading.Thread(target=callback, args=(timeOfMotion,)).start()
@@ -103,8 +100,10 @@ def handleNoMotionFrame():
 
 
 def close():
+    '''Trigger end of motion manually.'''
+
     global noMotionFrames
-    noMotionFrames = MOTION_THRESHOLD -1
+    noMotionFrames = Firestore.settings['motionThreshold'] - 1
     handleNoMotionFrame()
 
 
@@ -118,6 +117,7 @@ def onMotion(callback):
 
     onMotionCallbacks.append(callback)
 
+
 def onMotionEnd(callback):
     '''Add a callback to execute when motion threshold is reset after reaching threshold
 
@@ -128,7 +128,10 @@ def onMotionEnd(callback):
 
     onMotionEndCallbacks.append(callback)
 
+
 def clearCallbacks():
+    '''Clear all callbacks from the global lists'''
+
     global onMotionCallbacks
     global onMotionEndCallbacks
 

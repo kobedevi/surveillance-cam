@@ -1,6 +1,7 @@
 from Firebase import Firebase
 from Firebase import Firestore
-import Camera
+from Camera import Camera
+from Actuators import Led
 from time import sleep
 import sys
 
@@ -9,6 +10,10 @@ def main():
     Camera.init()
 
     Firestore.listenToSettings()
+
+    Firestore.onSettingsChange('running', Led.toggle)
+    Firestore.onSettingsChange('led', Led.toggle)
+
     Camera.start()
 
 try:

@@ -10,7 +10,6 @@ const formatDate = (input, format) => {
     dateObj = dayjs(input, 'YYYYMMDDTHHmmss');
   } else if ('seconds' in input) {
     dateObj = dayjs.unix(input.seconds);
-    dateObj = dateObj.subtract(2, 'hours'); // Fix Firestore incorrect offset
   }
 
   return dateObj.format(format);
