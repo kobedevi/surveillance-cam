@@ -22,9 +22,11 @@ const Slider = ({
         step={+step}
         onChange={onChange}
       />
-      <p>
-        <small>{info}</small>
-      </p>
+      {info && (
+        <p>
+          <small>{info}</small>
+        </p>
+      )}
     </div>
   );
 };

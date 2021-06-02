@@ -1,5 +1,4 @@
 const Routes = Object.freeze({
-  // old
   Login: '/login',
   Home: '/home',
   Timeline: '/timeline',

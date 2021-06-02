@@ -8,8 +8,6 @@ const useRegistrationToken = () => {
   const [token, setToken] = useState();
   const [error, setError] = useState();
 
-  // Notification.requestPermission();
-
   useEffect(() => {
     const getToken = async () => {
       // Get permission
