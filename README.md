@@ -1,28 +1,21 @@
 # Surveillance camera
 
-This project consists of a security camera that will send a push notification with a picture when motion is detected. After detecting motion, a recording will be made and uploaded to Firebase. The dashboard can be used to enable/disable the camera, view the timeline of recordings, and change the settings.
-
-_WIP: Mention led and buzzer_
+This project consists of a security camera that will send a push notification with a picture when motion is detected. After detecting motion, a recording will be made and uploaded to Firebase. The dashboard can be used to enable/disable the camera, view the timeline of recordings, and change the settings. LEDs can be connected to indicate the state of the camera and recording.
 
 **Team:** Kobe Devillé, Jonas Di Dier, Dante Weverbergh
 
 ## Screenshots
 
-_WIP: Add more and final screenshot_
-_TIP: Write images on same line to place them side by side_
-
-![localhost-3000-timeline-Moto-G4.png](https://i.postimg.cc/Y2Ywymcm/localhost-3000-timeline-Moto-G4.png)
+![Home.png](https://i.postimg.cc/MG4xdbMj/Home.png) ![Settings.png](https://i.postimg.cc/k4bCZ6KY/Settings.png) ![Timeline.png](https://i.postimg.cc/8cgGVpbp/Timeline.png) ![Timeline-Detail.png](https://i.postimg.cc/yNWsmrdH/Timeline-Detail.png)
 
 ## Installation
 
 ### Required hardware
 
-- [x] Raspberry pi
+- [x] Raspberry Pi
 - [x] Camera module
-- [x] Led light
-- [x] Buzzer
-- [x] Jumper cables and a resistor
-- [x] Breadboard (optional)
+- [x] 2 LEDs and resistors
+- [x] Jumper cables and breadboard (optional)
 
 ### Camera
 
@@ -32,9 +25,13 @@ _TIP: Write images on same line to place them side by side_
   - CLI: `sudo raspi-config` > Interfacing Options
 - Reboot
 
-### Led and buzzer
+### LED
 
-_WIP: Led and buzzer setup guide_
+- Connect the LEDs to GPIO pin 14 and 22
+  - Pin 14 will indicate the state of the camera
+  - Pin 22 will indicate whether or not the camera is currently recording
+
+![circuit.png](https://i.postimg.cc/W14bb40S/circuit.png)
 
 ### Dependencies
 
