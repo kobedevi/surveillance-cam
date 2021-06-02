@@ -6,7 +6,7 @@ This project consists of a security camera that will send a push notification wi
 
 ## Screenshots
 
-![Home.png](https://i.postimg.cc/MG4xdbMj/Home.png) ![Settings.png](https://i.postimg.cc/k4bCZ6KY/Settings.png) ![Timeline.png](https://i.postimg.cc/8cgGVpbp/Timeline.png) ![Timeline-Detail.png](https://i.postimg.cc/yNWsmrdH/Timeline-Detail.png)
+![Home.png](https://i.postimg.cc/MG4xdbMj/Home.png) ![Timeline.png](https://i.postimg.cc/8cgGVpbp/Timeline.png) ![Timeline-Detail.png](https://i.postimg.cc/yNWsmrdH/Timeline-Detail.png) ![Settings.png](https://i.postimg.cc/k4bCZ6KY/Settings.png)
 
 ## Installation
 
