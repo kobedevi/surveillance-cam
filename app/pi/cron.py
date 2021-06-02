@@ -9,8 +9,10 @@ import sys
 def main():
   Firebase.init()
 
-  lastWeek = pytz.timezone('Europe/Brussels').localize(datetime.now()) - timedelta(7)
-  oldDocs = Firestore.getOldDocs(lastWeek)
+  settings = Firestore.getSettings()
+
+  removeDate = pytz.timezone('Europe/Brussels').localize(datetime.now()) - timedelta(settings['daysBeforeRemoval]')
+  oldDocs = Firestore.getOldDocs(removeDate)
 
   for doc in oldDocs:
     # Get all recordings

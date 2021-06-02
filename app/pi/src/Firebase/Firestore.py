@@ -73,6 +73,13 @@ onSettingsChangeCallbacks = {
     'running': [],
 }
 
+def getSettings():
+    '''Get the settings document as a dict'''
+
+    settings = _getCollection('app').document('settings').get()
+    return settings.to_dict()
+
+
 def listenToSettings():
     '''Listen to changes on the settings document.
     On snapshot:
