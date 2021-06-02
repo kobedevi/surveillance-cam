@@ -20,7 +20,8 @@ def checkForMotion(frame):
     '''
 
     global motionFrames
-    print(motionFrames)
+    # Print motionFrames to see how far we are along
+    # print(motionFrames)
 
     # Convert frame to grayscale and blur
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

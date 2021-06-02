@@ -25,8 +25,6 @@ def sendPushNotification(registrationTokens, title, imgUrl):
     response = messaging.send_multicast(message)
 
     # Response is a message ID string
-    print('Successfully sent message:', response)
-
     removeFailedTokens(response, registrationTokens)
 
 

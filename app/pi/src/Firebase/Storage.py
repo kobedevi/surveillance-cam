@@ -29,7 +29,6 @@ def uploadFile(source, destination):
     # Upload file
     blob.upload_from_filename(source)
     blob.make_public()
-    print("File {} uploaded to {}.".format(source, destination))
 
     # Delete local file
     os.remove(source)
