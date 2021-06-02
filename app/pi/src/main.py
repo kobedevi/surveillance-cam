@@ -2,7 +2,6 @@ from Firebase import Firebase
 from Firebase import Firestore
 from Camera import Camera
 from Actuators import Led
-from time import sleep
 import sys
 
 def main():
