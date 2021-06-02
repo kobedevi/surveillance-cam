@@ -29,6 +29,7 @@ def sendPushNotification(registrationTokens, title, imgUrl):
 
     removeFailedTokens(response, registrationTokens)
 
+
 def notifyUsersWithPicture(imgPath):
     '''Send a push notification with image.
 
@@ -36,13 +37,13 @@ def notifyUsersWithPicture(imgPath):
         imgPath (string): The path to the image in the Firebase Storage.
     '''
 
-    settings = Firestore.getSettings()
     imgUrl = Storage.getPublicURL(imgPath)
 
-    sendPushNotification(settings['registrationTokens'], PUSH_TITLE, imgUrl)
+    sendPushNotification(Firestore.settings['registrationTokens'], PUSH_TITLE, imgUrl)
+
 
 def removeFailedTokens(response, registrationTokens):
-    '''Remove a list of tokens from the Firestore
+    '''Remove a list of tokens from the Firestore.
 
     Args:
         response: The response object when calling messaging.send_multicast()

@@ -45,13 +45,13 @@ def addFileToDocument(fileName, field, dt):
     docRef = docSnapshot[0].reference if docSnapshot else createDocument(dt, fileName)
     doc = docRef.get().to_dict()
 
-    # Compare time
+    # Create a new document if the previous has become stale
     lastMotion = doc['lastMotion']
     timeSinceLastMotion = dt.timestamp() - lastMotion.timestamp()
 
     if (timeSinceLastMotion > settings['docStaleTime'] * 60):
         docRef = createDocument(dt, fileName)
-    
+
     # Update document
     docRef.update({ 'lastMotion': dt })
 
@@ -67,18 +67,11 @@ def addFileToDocument(fileName, field, dt):
 
 # APP COLLECTION
 
-settings = None
+settings = None # A synchronized copy of the Firestore settings
 onSettingsChangeCallbacks = {
     'led': [],
     'running': [],
 }
-
-def getSettings():
-    '''Get the settings document as a dict'''
-
-    settings = _getCollection('app').document('settings').get()
-    return settings.to_dict()
-
 
 def listenToSettings():
     '''Listen to changes on the settings document.
@@ -87,6 +80,7 @@ def listenToSettings():
      - Update the global settings dict with the new document
      - Execute all callbacks that listen to the changed key
     '''
+
     def onSnapshot(docSnapshot, changes, readTime):
         global settings
 
@@ -116,7 +110,7 @@ def executeSettingsCallbacks(changedKeys):
     '''Execute all callbacks that listen to the given keys
     
     Args:
-        changedKeys (list): The list of changed keys
+        changedKeys (list): The list of changed keys in the settings dict
     '''
 
     for key in changedKeys:
@@ -136,6 +130,7 @@ def onSettingsChange(field, callback):
 
     onSettingsChangeCallbacks[field].append(callback)
 
+
 def removeRegistrationTokens(registrationTokens):
     '''Remove registration tokens from the settings document.
 
@@ -150,10 +145,13 @@ def removeRegistrationTokens(registrationTokens):
 # CRON JOB
 
 def getOldDocs(dt):
-    '''Get all documents from the camera collection where the last motion occured before a given time
+    '''Get all documents from the camera collection where the last motion occured before a given time.
     
     Args:
-        dt (datetime): The time that defines a document as 'old'
+        dt (datetime): The time that defines a document as 'old'.
+
+    Returns:
+        list[DocumentSnapshot]: A list of documents that match the query.
     '''
 
     return _getCollection('camera').where('lastMotion', '<', dt).get()

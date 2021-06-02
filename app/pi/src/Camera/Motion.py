@@ -12,9 +12,8 @@ onMotionEndCallbacks = [] # Callbacks to execute when noMotionFrames reaches thr
 timeOfMotion = None # Time when current motion started
 
 def checkForMotion(frame):
-    '''Compares the current frame with the average frame and
-    increments motion frames if the difference exceeds CONTOUR_MIN_AREA.
-    If no average is set, it will use the frame to set the initial average.
+    '''Compares the current frame with the previous frame and
+    increments motion frames if the difference exceeds Firestore.settings['contourArea'].
 
     Args:
         frame (array): The array returned when reading PiArrayOutput.array.
@@ -22,6 +21,7 @@ def checkForMotion(frame):
 
     global motionFrames
     print(motionFrames)
+
     # Convert frame to grayscale and blur
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
@@ -75,8 +75,9 @@ def handleMotionFrame():
 
 def handleNoMotionFrame():
     '''Increment noMotionFrames. Execute callbacks and reset if threshold is reached
-        Resets if motionFrames has not reached threshold (i.e. currently no motion)
+        Reset immediately if motionFrames has not reached threshold (i.e. currently no motion)
     '''
+
     global motionFrames
     global noMotionFrames
     global timeOfMotion
@@ -103,6 +104,7 @@ def close():
     '''Trigger end of motion manually.'''
 
     global noMotionFrames
+
     noMotionFrames = Firestore.settings['motionThreshold'] - 1
     handleNoMotionFrame()
 
@@ -119,7 +121,7 @@ def onMotion(callback):
 
 
 def onMotionEnd(callback):
-    '''Add a callback to execute when motion threshold is reset after reaching threshold
+    '''Add a callback to execute when motion threshold is reset after the motion event
 
     Args:
         callback (function): The function that will be called.
