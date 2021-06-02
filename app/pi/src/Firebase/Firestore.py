@@ -46,10 +46,10 @@ def addFileToDocument(fileName, field, dt):
     doc = docRef.get().to_dict()
 
     # Compare time
-    lastMotion = doc['lastMotion'].replace(tzinfo=None)
+    lastMotion = doc['lastMotion']
     timeSinceLastMotion = dt.timestamp() - lastMotion.timestamp()
 
-    if (timeSinceLastMotion > DOC_STALE_TIME):
+    if (timeSinceLastMotion > settings['docStaleTime'] * 60):
         docRef = createDocument(dt, fileName)
     
     # Update document
@@ -70,7 +70,7 @@ def addFileToDocument(fileName, field, dt):
 settings = None
 onSettingsChangeCallbacks = {
     'led': [],
-    'buzzer': [],
+    'running': [],
 }
 
 def getSettings():
@@ -135,7 +135,6 @@ def onSettingsChange(field, callback):
     '''
 
     onSettingsChangeCallbacks[field].append(callback)
-
 
 def removeRegistrationTokens(registrationTokens):
     '''Remove registration tokens from the settings document.

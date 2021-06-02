@@ -4,8 +4,6 @@ from datetime import datetime
 import pytz
 from Firebase import Firestore
 
-CONTOUR_MIN_AREA = 800 # Minimum contour area to qualify as motion (cv2.findContours())
-
 avg = None # The initial frame to compare the other frames with
 motionFrames = 0 # Current amount of frames where motion is detected
 noMotionFrames = 0 # Current amount of frames where no motion is detected
@@ -23,7 +21,7 @@ def checkForMotion(frame):
     '''
 
     global motionFrames
-
+    print(motionFrames)
     # Convert frame to grayscale and blur
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)

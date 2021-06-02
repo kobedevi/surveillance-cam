@@ -8,6 +8,7 @@ from Firebase import Firestore
 from Firebase import Messaging
 from Firebase import Storage
 from Camera import Motion
+from Actuators import Led
 
 camera = None
 outPath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'out/')
@@ -34,7 +35,9 @@ def start():
 	# Add callbacks to call when motion is detected
 	Motion.onMotion(takePicture)
 	Motion.onMotion(startRecording)
+	Motion.onMotion(Led.on)
 	Motion.onMotionEnd(stopRecording)
+	Motion.onMotionEnd(Led.off)
 
 	# Start capturing frames
 	rawCapture = PiRGBArray(camera, size = camera.resolution)	
@@ -51,13 +54,10 @@ def start():
 
 def stop():
 	'''Clear motion callbacks and release all resources associated with the camera object.'''
-
 	global camera
-
 	Motion.clearCallbacks()
 	camera.close()
 	camera = None
-
 
 def addAnnotation():
 	'''Add a timestamp as annotation to the camera output.'''
