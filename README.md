@@ -4,21 +4,25 @@ This project consists of a security camera that will send a push notification wi
 
 **Team:** Kobe Devillé, Jonas Di Dier, Dante Weverbergh
 
+## Videos
+
+- Project overview: _WIP_
+- Technical explanation: https://youtu.be/z5Ts6NQ8LjI
+
+## Demo
+
+This project includes a default dashboard connected to our Firebase project for demonstration purposes. If you want to recreate this project, follow the [installation guide](#Installation) below instead to connect your own dashboard.
+
+- Visit https://iot-werkstuk.web.app on a mobile device
+- Install the application as a PWA (_Add to home screen_)
+- Open the application from your home screen and log in with the following credentials
+  - Email: `user@iot.com`
+  - Password: `password`
+
 ## Screenshots
 
 ![Home.png](https://i.postimg.cc/MG4xdbMj/Home.png) ![Timeline.png](https://i.postimg.cc/8cgGVpbp/Timeline.png) ![Timeline-Detail.png](https://i.postimg.cc/yNWsmrdH/Timeline-Detail.png) ![Settings.png](https://i.postimg.cc/k4bCZ6KY/Settings.png)
 
-## Videos
-  - Project overview: _WIP_
-  - Technische uitleg: https://youtu.be/z5Ts6NQ8LjI
-
-## Demo of live application
-_WIP : update link to firebase installation, add firebaseKey somewhere_
-  - Follow the installation guide below, but at the [Firebase](#Dashboard) step use our provided `serviceAccountKey.json` file instead.
-    - At the [Dashboard](#Dashboard) step go to https://iot-werkstuk.web.app instead of your own hosted site and use the following credentials
-      - Email: `user@iot.com`
-      - Password: `password`
-  
 ## Installation
 
 ### Required hardware
@@ -46,8 +50,6 @@ _WIP : update link to firebase installation, add firebaseKey somewhere_
 
 ### Dependencies
 
-_WIP: Review commands (consistent use of pip/pip3, apt/apt-get; remove useless commands)_
-
 Run these commands to install the necessary dependencies
 
 ```
@@ -60,7 +62,7 @@ sudo apt-get install libqtgui4
 sudo apt-get install libqt4-test
 sudo apt install -y gpac
 
-# NOTE: if opencv won't install use pip3
+# NOTE: if opencv won't install, use pip3
 
 pip install opencv-python
 pip install firebase -U
@@ -79,11 +81,35 @@ pip install google-cloud-storage -U
 
 ### Dashboard
 
-- Visit https://iot-werkstuk.web.app on a mobile device
-- Install the application as a PWA (_Add to home screen_)
-- Open the application from your home screen and log in with the following credentials
-  - Email: `user@iot.com`
-  - Password: `password`
+This repository provides a default dashboard for demonstration purposes. If you want to visit the dashboard, use the steps provided above. If you want to recreate this project, follow these instructions to link your own Firebase project.
+
+1. Go to the Firebase console by visiting firebase.google.com and add a new project. (A detailed guide can be found in the [Firebase documentations](https://firebase.google.com/docs/web/setup?sdk_version=v8)).
+1. Connect your Raspberry Pi:
+   - Go to _Project settings > Service accounts_ and generate a new private key. This will download a json file to your local drive.
+   - Copy this file to your Raspberry Pi, inside the folder /app/pi/src/Firebase.
+   - Alternatively, copy the content of this file to the provided serviceAccountKey.example.json.
+   - Rename the file to serviceAccountKey.json
+1. Connect the dashboard:
+   - From the Firebase console, add a web app.
+   - Provide a nickname and make sure to set up Firebase Hosting.
+   - Run the command `npm install -g firebase-hosting` in your terminal.
+   - From the root of the web app, run `firebase login`, followed by `firebase init`.
+   - Go to _Project settings_ in the console and copy the Firebase configuration object under _General > Your apps > SDK setup and configuration > Config_.
+   - Navigate to /src/core/services/firebase.js and replace the object with the one you copied.
+1. Configure Cloud Messaging:
+   - Inside the Project settings, go to the _Cloud Messaging_ tab and generate a key pair.
+   - Copy the key, navigate to /src/core/hooks/useRegistrationToken.js and replace the provided vapidKey with your key.
+1. Enable Firestore:
+   - Go to _Build > Firestore Database_ and create a new database.
+1. Enable Authentication:
+   - Go to _Build > Authentication_ and click _Get started_.
+   - Enable _Email/Password_ as sign-in provider.
+   - Go to the tab _Users_ and add a user. The credentials you provide will be used to login to the dashboard.
+1. Build and deploy:
+   - Navigate to the root of the web application (/app/web) and run `yarn install`.
+   - Run `yarn build`, followed by `firebase deploy`. Your dashboard is now available online.
+   - Open the URL on a mobile device and install the application as a PWA (_Add to home screen_).
+   - Open the application from your home screen and log in with the account you provided earlier.
 
 ## Credits
 
