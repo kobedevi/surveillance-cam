@@ -81,7 +81,7 @@ pip install google-cloud-storage -U
 
 ### Dashboard
 
-This repository provides a default dashboard for demonstration purposes. If you want to visit the dashboard, use the steps provided above. If you want to recreate this project, follow these instructions to link your own Firebase project.
+This repository provides a default dashboard for demonstration purposes. If you want to visit this dashboard, use the steps provided [above](#Demo). If you want to recreate this project, follow these instructions to link your own Firebase project.
 
 1. Go to the Firebase console by visiting firebase.google.com and add a new project. (A detailed guide can be found in the [Firebase documentations](https://firebase.google.com/docs/web/setup?sdk_version=v8)).
 1. Connect your Raspberry Pi:
