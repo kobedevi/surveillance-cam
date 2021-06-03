@@ -7,7 +7,7 @@ This project consists of a security camera that will send a push notification wi
 ## Videos
 
 - Project overview: _WIP_
-- Technical explanation: https://youtu.be/z5Ts6NQ8LjI
+- Technical explanation [Dutch]: https://youtu.be/z5Ts6NQ8LjI
 
 ## Demo
 
