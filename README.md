@@ -8,6 +8,17 @@ This project consists of a security camera that will send a push notification wi
 
 ![Home.png](https://i.postimg.cc/MG4xdbMj/Home.png) ![Timeline.png](https://i.postimg.cc/8cgGVpbp/Timeline.png) ![Timeline-Detail.png](https://i.postimg.cc/yNWsmrdH/Timeline-Detail.png) ![Settings.png](https://i.postimg.cc/k4bCZ6KY/Settings.png)
 
+## Videos
+  - Project overview: _WIP_
+  - Technische uitleg: https://youtu.be/z5Ts6NQ8LjI
+
+## Demo of live application
+_WIP : update link to firebase installation, add firebaseKey somewhere_
+  - Follow the installation guide below, but at the [Firebase](#Dashboard) step use our provided `serviceAccountKey.json` file instead.
+    - At the [Dashboard](#Dashboard) step go to https://iot-werkstuk.web.app instead of your own hosted site and use the following credentials
+      - Email: `user@iot.com`
+      - Password: `password`
+  
 ## Installation
 
 ### Required hardware
@@ -49,7 +60,9 @@ sudo apt-get install libqtgui4
 sudo apt-get install libqt4-test
 sudo apt install -y gpac
 
-pip3 install opencv-python
+# NOTE: if opencv won't install use pip3
+
+pip install opencv-python
 pip install firebase -U
 pip install firebase-admin -U
 pip install google-cloud-storage -U
@@ -71,10 +84,6 @@ pip install google-cloud-storage -U
 - Open the application from your home screen and log in with the following credentials
   - Email: `user@iot.com`
   - Password: `password`
-
-## Videos
-  - Project overview: _WIP_
-  - Technische uitleg: https://youtu.be/z5Ts6NQ8LjI
 
 ## Credits
 
