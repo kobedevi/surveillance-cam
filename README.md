@@ -72,6 +72,10 @@ pip install google-cloud-storage -U
   - Email: `user@iot.com`
   - Password: `password`
 
+## Videos
+  - Project overview: _WIP_
+  - Technische uitleg: https://youtu.be/z5Ts6NQ8LjI
+
 ## Credits
 
 Icon made by [Freepik](https://www.freepik.com) from [www.flaticon.com](https://www.flaticon.com)
