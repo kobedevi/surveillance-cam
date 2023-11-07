@@ -72,7 +72,7 @@ pip install google-cloud-storage -U
 
 ### Run the program
 
-- Clone this repository to your Raspberry Pi `git clone https://github.com/gdmgent-iot/werkstuk-examen-2021-team-kobe-dante-jonas.git surveillance-camera`
+- Clone this repository to your Raspberry Pi `git clone https://github.com/kobedevi/surveillance-cam.git`
 - Add a cron job to automatically delete old files
   - Run `crontab -e` to edit the cron table
   - Write `0 0 * * * python3 /home/pi/surveillance-camera/app/pi/cron.py` (adjust the path if needed)
